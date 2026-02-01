@@ -1,0 +1,42 @@
+# PMAT Project Configuration
+# TGI Ground Truth Corpus - A+ Grade Target
+
+[project]
+name = "tgi-ground-truth-corpus"
+version = "0.1.0"
+grade_target = "A+"
+
+[quality]
+coverage_threshold = 95
+mutation_threshold = 80
+complexity_threshold = 15
+documentation_required = true
+
+[gates]
+tier1 = ["fmt-check", "check", "clippy"]
+tier2 = ["tier1", "test-lib"]
+tier3 = ["tier2", "test", "coverage-check"]
+tier4 = ["tier3", "test-release", "mutants", "doc"]
+
+[commit]
+require_ticket = true
+ticket_pattern = "TGI-\\d+"
+require_co_author = true
+
+[testing]
+runner = "nextest"
+parallel = true
+property_based = true
+benchmark_critical_paths = true
+
+[lints]
+clippy_pedantic = true
+clippy_nursery = true
+deny_warnings = true
+forbid_unsafe = true
+
+[documentation]
+require_module_docs = true
+require_function_docs = true
+require_examples = true
+require_error_docs = true
