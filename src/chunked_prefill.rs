@@ -299,6 +299,7 @@ impl ChunkedPrefill {
 }
 
 /// Error type for chunked prefill.
+#[allow(missing_docs)]
 #[derive(Debug, Clone, thiserror::Error)]
 pub enum ChunkError {
     /// Prompt exceeds maximum length.

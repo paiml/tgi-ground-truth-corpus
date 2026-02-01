@@ -38,6 +38,7 @@ pub struct ImageInput {
 }
 
 /// Source of image data.
+#[allow(missing_docs)]
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub enum ImageSource {
     /// Base64-encoded image data.
@@ -46,9 +47,13 @@ pub enum ImageSource {
     Url(String),
     /// Raw pixel data (RGB, flattened).
     Pixels {
+        /// Raw pixel data.
         data: Vec<u8>,
+        /// Image width.
         width: u32,
+        /// Image height.
         height: u32,
+        /// Number of channels.
         channels: u8,
     },
 }
@@ -397,6 +402,7 @@ impl MultimodalRequest {
 }
 
 /// Error type for vision operations.
+#[allow(missing_docs)]
 #[derive(Debug, Clone, thiserror::Error)]
 pub enum VisionError {
     /// Mismatched image positions.

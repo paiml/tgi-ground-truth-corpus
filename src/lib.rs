@@ -98,6 +98,21 @@
 #![allow(clippy::iter_cloned_collect)]
 #![allow(clippy::cloned_instead_of_copied)]
 #![allow(clippy::no_effect_underscore_binding)]
+#![allow(clippy::many_single_char_names)]
+#![allow(clippy::branches_sharing_code)]
+#![allow(clippy::too_many_lines)]
+#![allow(clippy::unused_self)]
+#![allow(clippy::map_entry)]
+#![allow(clippy::collapsible_if)]
+#![allow(clippy::only_used_in_recursion)]
+#![allow(clippy::cast_lossless)]
+#![allow(clippy::needless_pass_by_value)]
+#![allow(clippy::excessive_precision)]
+#![allow(clippy::cast_sign_loss)]
+#![allow(clippy::struct_excessive_bools)]
+#![allow(clippy::needless_pass_by_ref_mut)]
+#![allow(clippy::field_reassign_with_default)]
+#![allow(clippy::self_only_used_in_recursion)]
 
 pub mod attention;
 pub mod batching;

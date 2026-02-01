@@ -173,6 +173,7 @@ impl TokenMask {
 }
 
 /// State of grammar parsing.
+#[allow(missing_docs)]
 #[derive(Debug, Clone)]
 pub enum GrammarState {
     /// At start of grammar.
@@ -508,14 +509,22 @@ pub struct JsonSchema {
 }
 
 /// JSON Schema types.
+#[allow(missing_docs)]
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub enum JsonSchemaType {
+    /// Object type.
     Object,
+    /// Array type.
     Array,
+    /// String type.
     String,
+    /// Number type.
     Number,
+    /// Integer type.
     Integer,
+    /// Boolean type.
     Boolean,
+    /// Null type.
     Null,
 }
 

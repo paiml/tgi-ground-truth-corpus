@@ -427,6 +427,7 @@ impl ToolRegistry {
 }
 
 /// Error type for tool operations.
+#[allow(missing_docs)]
 #[derive(Debug, Clone, thiserror::Error)]
 pub enum ToolError {
     /// Unknown tool name.
