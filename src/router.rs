@@ -645,6 +645,53 @@ mod tests {
 
         assert!((metrics.utilization() - 0.25).abs() < 0.001);
     }
+
+    #[test]
+    fn test_router_config_builder_all_fields() {
+        let config = RouterConfig::builder()
+            .port(9000)
+            .max_concurrent_requests(256)
+            .max_batch_size(64)
+            .timeout_secs(120)
+            .openai_compat(false)
+            .enable_metrics(false)
+            .hostname("localhost")
+            .build();
+
+        assert_eq!(config.port, 9000);
+        assert_eq!(config.max_concurrent_requests, 256);
+        assert_eq!(config.max_batch_size, 64);
+        assert_eq!(config.timeout_secs, 120);
+        assert!(!config.openai_compat);
+        assert!(!config.enable_metrics);
+        assert_eq!(config.hostname, "localhost");
+    }
+
+    #[test]
+    fn test_router_state_total_count() {
+        let state = RouterState::new(10);
+        state.set_ready(true);
+
+        // Simulate some requests
+        let _guard1 = state.try_acquire().unwrap();
+        let _guard2 = state.try_acquire().unwrap();
+
+        assert_eq!(state.total_count(), 2);
+    }
+
+    #[test]
+    fn test_metrics_success_rate_no_requests() {
+        let metrics = RouterMetrics {
+            total_requests: 0,
+            active_requests: 0,
+            completed_requests: 0,
+            failed_requests: 0,
+            max_concurrent_requests: 128,
+        };
+
+        // Should return 1.0 (100% success) when no requests
+        assert!((metrics.success_rate() - 1.0).abs() < 0.001);
+    }
 }
 
 #[cfg(test)]

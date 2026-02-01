@@ -276,4 +276,96 @@ mod tests {
         let sse = formatter.format_token(&event);
         assert!(sse.contains(r#""special":true"#));
     }
+
+    #[test]
+    fn test_sse_formatter_with_logprob() {
+        let mut formatter = SseFormatter::new();
+        formatter.include_logprobs = true;
+
+        let event = TokenEvent {
+            token: "test".to_string(),
+            token_id: 1,
+            logprob: Some(-150),
+            special: false,
+        };
+
+        let sse = formatter.format_token(&event);
+        assert!(sse.contains(r#""logprob":-150"#));
+    }
+
+    #[test]
+    fn test_sse_formatter_logprob_none() {
+        let mut formatter = SseFormatter::new();
+        formatter.include_logprobs = true;
+
+        let event = TokenEvent {
+            token: "test".to_string(),
+            token_id: 1,
+            logprob: None,
+            special: false,
+        };
+
+        let sse = formatter.format_token(&event);
+        // Should not contain logprob field when None
+        assert!(!sse.contains("logprob"));
+    }
+
+    #[test]
+    fn test_escape_json_backslash() {
+        assert_eq!(escape_json("path\\file"), "path\\\\file");
+    }
+
+    #[test]
+    fn test_escape_json_carriage_return() {
+        assert_eq!(escape_json("line\rreturn"), "line\\rreturn");
+    }
+
+    #[test]
+    fn test_escape_json_control_char() {
+        // Test control character (ASCII 0x01)
+        let input = "test\x01char";
+        let escaped = escape_json(input);
+        assert!(escaped.contains("\\u0001"));
+    }
+
+    #[test]
+    fn test_stream_event_variants() {
+        let token = StreamEvent::Token(TokenEvent {
+            token: "hi".to_string(),
+            token_id: 1,
+            logprob: None,
+            special: false,
+        });
+        assert!(matches!(token, StreamEvent::Token(_)));
+
+        let complete = StreamEvent::Complete(CompleteEvent {
+            generated_tokens: 10,
+            finish_reason: FinishReason::Length,
+            generation_time_ms: 100,
+        });
+        assert!(matches!(complete, StreamEvent::Complete(_)));
+
+        let error = StreamEvent::Error("failed".to_string());
+        assert!(matches!(error, StreamEvent::Error(_)));
+    }
+
+    #[test]
+    fn test_complete_event_fields() {
+        let event = CompleteEvent {
+            generated_tokens: 50,
+            finish_reason: FinishReason::EndOfSequence,
+            generation_time_ms: 2500,
+        };
+
+        assert_eq!(event.generated_tokens, 50);
+        assert_eq!(event.finish_reason, FinishReason::EndOfSequence);
+        assert_eq!(event.generation_time_ms, 2500);
+    }
+
+    #[test]
+    fn test_sse_formatter_default() {
+        let formatter = SseFormatter::default();
+        assert!(!formatter.include_token_ids);
+        assert!(!formatter.include_logprobs);
+    }
 }

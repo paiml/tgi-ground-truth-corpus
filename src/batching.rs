@@ -541,6 +541,116 @@ mod tests {
         assert_eq!(batcher.next_id(), 2);
         assert_eq!(batcher.next_id(), 3);
     }
+
+    #[test]
+    fn test_batch_empty() {
+        let batch = Batch::new(vec![]);
+        assert!(batch.is_empty());
+        assert_eq!(batch.size(), 0);
+        assert_eq!(batch.total_input_tokens, 0);
+        assert_eq!(batch.avg_wait_time(), std::time::Duration::ZERO);
+        assert_eq!(batch.max_wait_time(), std::time::Duration::ZERO);
+    }
+
+    #[test]
+    fn test_batch_wait_times() {
+        let requests = vec![
+            BatchRequest::new(1, 100, 50),
+            BatchRequest::new(2, 200, 100),
+        ];
+
+        let batch = Batch::new(requests);
+        // Wait times should be very small since just created
+        assert!(batch.avg_wait_time() < std::time::Duration::from_millis(100));
+        assert!(batch.max_wait_time() < std::time::Duration::from_millis(100));
+    }
+
+    #[test]
+    fn test_batch_request_wait_time() {
+        let request = BatchRequest::new(1, 100, 50);
+        // Just created, wait time should be tiny
+        assert!(request.wait_time() < std::time::Duration::from_millis(100));
+    }
+
+    #[test]
+    fn test_batch_config_builder_defaults() {
+        let config = BatchConfig::builder().build();
+        let default = BatchConfig::default();
+
+        assert_eq!(config.max_batch_size, default.max_batch_size);
+        assert_eq!(config.max_batch_tokens, default.max_batch_tokens);
+        assert_eq!(config.max_wait_ms, default.max_wait_ms);
+        assert_eq!(config.min_batch_size, default.min_batch_size);
+    }
+
+    #[test]
+    fn test_batch_config_builder_all_fields() {
+        let config = BatchConfig::builder()
+            .max_batch_size(16)
+            .max_batch_tokens(2048)
+            .max_wait_ms(100)
+            .min_batch_size(4)
+            .build();
+
+        assert_eq!(config.max_batch_size, 16);
+        assert_eq!(config.max_batch_tokens, 2048);
+        assert_eq!(config.max_wait_ms, 100);
+        assert_eq!(config.min_batch_size, 4);
+    }
+
+    #[test]
+    fn test_batcher_config_access() {
+        let config = BatchConfig::builder().max_batch_size(64).build();
+        let batcher = ContinuousBatcher::new(config);
+
+        assert_eq!(batcher.config().max_batch_size, 64);
+    }
+
+    #[test]
+    fn test_batcher_empty_try_form_batch() {
+        let batcher = ContinuousBatcher::new(BatchConfig::default());
+        assert!(batcher.try_form_batch().is_none());
+    }
+
+    #[test]
+    fn test_batcher_empty_force_batch() {
+        let batcher = ContinuousBatcher::new(BatchConfig::default());
+        assert!(batcher.force_batch().is_none());
+    }
+
+    #[test]
+    fn test_force_batch_respects_size_limit() {
+        let config = BatchConfig::builder()
+            .max_batch_size(2)
+            .min_batch_size(1)
+            .build();
+        let batcher = ContinuousBatcher::new(config);
+
+        batcher.add(BatchRequest::new(1, 100, 50));
+        batcher.add(BatchRequest::new(2, 100, 50));
+        batcher.add(BatchRequest::new(3, 100, 50));
+
+        let batch = batcher.force_batch().unwrap();
+        assert_eq!(batch.size(), 2);
+        assert_eq!(batcher.queue_len(), 1);
+    }
+
+    #[test]
+    fn test_force_batch_respects_token_limit() {
+        let config = BatchConfig::builder()
+            .max_batch_tokens(150)
+            .max_batch_size(100)
+            .min_batch_size(1)
+            .build();
+        let batcher = ContinuousBatcher::new(config);
+
+        batcher.add(BatchRequest::new(1, 100, 50));
+        batcher.add(BatchRequest::new(2, 100, 50));
+
+        let batch = batcher.force_batch().unwrap();
+        assert_eq!(batch.size(), 1);
+        assert_eq!(batcher.queue_len(), 1);
+    }
 }
 
 #[cfg(test)]

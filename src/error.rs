@@ -312,4 +312,94 @@ mod tests {
         assert!(!Error::timeout("").is_client_error());
         assert!(!Error::timeout("").is_server_error());
     }
+
+    #[test]
+    fn test_error_display_all_variants() {
+        // Test Display for all error variants
+        assert_eq!(
+            format!("{}", Error::validation("bad")),
+            "validation error: bad"
+        );
+        assert_eq!(
+            format!("{}", Error::batching("fail")),
+            "batching error: fail"
+        );
+        assert_eq!(
+            format!("{}", Error::inference("model")),
+            "inference error: model"
+        );
+        assert_eq!(
+            format!("{}", Error::streaming("sse")),
+            "streaming error: sse"
+        );
+        assert_eq!(
+            format!("{}", Error::scheduling("queue")),
+            "scheduling error: queue"
+        );
+        assert_eq!(
+            format!("{}", Error::quantization("bits")),
+            "quantization error: bits"
+        );
+        assert_eq!(format!("{}", Error::config("cfg")), "config error: cfg");
+        assert_eq!(
+            format!("{}", Error::resource_exhausted("mem")),
+            "resource exhausted: mem"
+        );
+        assert_eq!(format!("{}", Error::timeout("slow")), "timeout: slow");
+        assert_eq!(format!("{}", Error::cancelled("user")), "cancelled: user");
+        assert_eq!(
+            format!("{}", Error::internal("panic")),
+            "internal error: panic"
+        );
+    }
+
+    #[test]
+    fn test_error_http_status_all_variants() {
+        // Client errors (4xx)
+        assert_eq!(Error::validation("").http_status(), 400);
+        assert_eq!(Error::config("").http_status(), 400);
+        assert_eq!(Error::cancelled("").http_status(), 499);
+        assert_eq!(Error::timeout("").http_status(), 408);
+        assert_eq!(Error::resource_exhausted("").http_status(), 429);
+
+        // Server errors (5xx)
+        assert_eq!(Error::inference("").http_status(), 500);
+        assert_eq!(Error::batching("").http_status(), 500);
+        assert_eq!(Error::streaming("").http_status(), 500);
+        assert_eq!(Error::scheduling("").http_status(), 500);
+        assert_eq!(Error::quantization("").http_status(), 500);
+        assert_eq!(Error::internal("").http_status(), 500);
+    }
+
+    #[test]
+    fn test_error_scheduling_is_server_error() {
+        // Scheduling is retryable but also a server-side error
+        let err = Error::scheduling("queue full");
+        assert!(err.is_retryable());
+        assert!(!err.is_server_error()); // It's neither client nor server
+        assert!(!err.is_client_error());
+    }
+
+    #[test]
+    fn test_error_resource_exhausted_not_server_error() {
+        let err = Error::resource_exhausted("memory");
+        assert!(err.is_retryable());
+        assert!(!err.is_server_error());
+        assert!(!err.is_client_error());
+    }
+
+    #[test]
+    fn test_error_std_error_impl() {
+        let err = Error::validation("test");
+        let std_err: &dyn std::error::Error = &err;
+        // Just verify we can use it as a std::error::Error
+        assert!(std_err.to_string().contains("validation"));
+    }
+
+    #[test]
+    fn test_error_equality() {
+        assert_eq!(Error::validation("a"), Error::validation("a"));
+        assert_ne!(Error::validation("a"), Error::validation("b"));
+        assert_ne!(Error::validation("a"), Error::inference("a"));
+    }
 }
