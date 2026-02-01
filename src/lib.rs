@@ -101,18 +101,28 @@
 
 pub mod attention;
 pub mod batching;
+pub mod chunked_prefill;
 pub mod error;
+pub mod grammar;
 pub mod inference;
 pub mod kv_cache;
+pub mod lora;
+pub mod metrics;
+pub mod prefix_cache;
 pub mod profiling;
 pub mod quantization;
 pub mod router;
 pub mod sampling;
 pub mod scheduling;
+pub mod speculation;
 pub mod stack;
 pub mod streaming;
 pub mod tokenizer;
+pub mod tools;
 pub mod validation;
+pub mod vision;
+pub mod warmup;
+pub mod watermark;
 
 pub use error::{Error, Result};
 
