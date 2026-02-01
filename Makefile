@@ -104,10 +104,33 @@ doc-open:
 	cargo doc --no-deps --all-features --open
 
 book:
-	mdbook build book
+	mdbook build
 
 book-serve:
-	mdbook serve book --open
+	mdbook serve --open
+
+# =============================================================================
+# Examples
+# =============================================================================
+
+examples:
+	cargo build --examples
+
+run-examples:
+	@echo "Running all examples..."
+	@cargo run --example basic_router
+	@echo ""
+	@cargo run --example continuous_batching
+	@echo ""
+	@cargo run --example streaming_sse
+	@echo ""
+	@cargo run --example request_validation
+	@echo ""
+	@cargo run --example inference_backend
+	@echo ""
+	@cargo run --example scheduler
+	@echo ""
+	@cargo run --example quantization
 
 # =============================================================================
 # Benchmarks

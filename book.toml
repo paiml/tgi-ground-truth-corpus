@@ -1,0 +1,19 @@
+[book]
+title = "TGI Ground Truth Corpus"
+authors = ["PAIML"]
+description = "Production-ready inference serving patterns from HuggingFace TGI"
+language = "en"
+src = "book/src"
+
+[build]
+build-dir = "book/build"
+
+[output.html]
+default-theme = "rust"
+preferred-dark-theme = "ayu"
+git-repository-url = "https://github.com/paiml/tgi-ground-truth-corpus"
+edit-url-template = "https://github.com/paiml/tgi-ground-truth-corpus/edit/main/{path}"
+
+[output.html.fold]
+enable = true
+level = 1

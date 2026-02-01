@@ -1,0 +1,323 @@
+<!DOCTYPE HTML>
+<html lang="en" class="rust sidebar-visible" dir="ltr">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>Quantization - TGI Ground Truth Corpus</title>
+
+
+        <!-- Custom HTML head -->
+
+        <meta name="description" content="Production-ready inference serving patterns from HuggingFace TGI">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff">
+
+        <link rel="icon" href="../favicon.svg">
+        <link rel="shortcut icon" href="../favicon.png">
+        <link rel="stylesheet" href="../css/variables.css">
+        <link rel="stylesheet" href="../css/general.css">
+        <link rel="stylesheet" href="../css/chrome.css">
+        <link rel="stylesheet" href="../css/print.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="../FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="../fonts/fonts.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" href="../highlight.css">
+        <link rel="stylesheet" href="../tomorrow-night.css">
+        <link rel="stylesheet" href="../ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+
+
+        <!-- Provide site root to javascript -->
+        <script>
+            var path_to_root = "../";
+            var default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "ayu" : "rust";
+        </script>
+        <!-- Start loading toc.js asap -->
+        <script src="../toc.js"></script>
+    </head>
+    <body>
+    <div id="body-container">
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                var theme = localStorage.getItem('mdbook-theme');
+                var sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            var theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            const html = document.documentElement;
+            html.classList.remove('rust')
+            html.classList.add(theme);
+            html.classList.add("js");
+        </script>
+
+        <input type="checkbox" id="sidebar-toggle-anchor" class="hidden">
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            var sidebar = null;
+            var sidebar_toggle = document.getElementById("sidebar-toggle-anchor");
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
+            }
+            sidebar_toggle.checked = sidebar === 'visible';
+            html.classList.remove('sidebar-visible');
+            html.classList.add("sidebar-" + sidebar);
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            <!-- populated by js -->
+            <mdbook-sidebar-scrollbox class="sidebar-scrollbox"></mdbook-sidebar-scrollbox>
+            <noscript>
+                <iframe class="sidebar-iframe-outer" src="../toc.html"></iframe>
+            </noscript>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle">
+                <div class="sidebar-resize-indicator"></div>
+            </div>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky">
+                    <div class="left-buttons">
+                        <label id="sidebar-toggle" class="icon-button" for="sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </label>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                        <button id="search-toggle" class="icon-button" type="button" title="Search. (Shortkey: s)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="S" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">TGI Ground Truth Corpus</h1>
+
+                    <div class="right-buttons">
+                        <a href="../print.html" title="Print this book" aria-label="Print this book">
+                            <i id="print-button" class="fa fa-print"></i>
+                        </a>
+                        <a href="https://github.com/paiml/tgi-ground-truth-corpus" title="Git repository" aria-label="Git repository">
+                            <i id="git-repository-button" class="fa fa-github"></i>
+                        </a>
+                        <a href="https://github.com/paiml/tgi-ground-truth-corpus/edit/main/book/src/patterns/quantization.md" title="Suggest an edit" aria-label="Suggest an edit">
+                            <i id="git-edit-button" class="fa fa-edit"></i>
+                        </a>
+
+                    </div>
+                </div>
+
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <h1 id="quantization-pattern"><a class="header" href="#quantization-pattern">Quantization Pattern</a></h1>
+<p>Model quantization types and compression.</p>
+<h2 id="tgi-source"><a class="header" href="#tgi-source">TGI Source</a></h2>
+<p>Derived from <code>backends/llamacpp/src/quantize.rs</code>:</p>
+<ul>
+<li>GGUF format support</li>
+<li>Dequantization kernels</li>
+<li>Mixed precision inference</li>
+</ul>
+<h2 id="sovereign-ai-stack-equivalent"><a class="header" href="#sovereign-ai-stack-equivalent">Sovereign AI Stack Equivalent</a></h2>
+<p>Maps to <code>aprender::quantize</code> for model quantization.</p>
+<h2 id="key-components"><a class="header" href="#key-components">Key Components</a></h2>
+<h3 id="quanttype"><a class="header" href="#quanttype">QuantType</a></h3>
+<p>Supported quantization types:</p>
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>use tgi_gtc::quantization::QuantType;
+
+enum QuantType {
+    Q4_0,   // 4-bit basic
+    Q4_K,   // 4-bit K-quants
+    Q5_K,   // 5-bit K-quants
+    Q6_K,   // 6-bit K-quants
+    Q8_0,   // 8-bit basic
+    F16,    // 16-bit float
+    F32,    // 32-bit float
+}
+<span class="boring">}</span></code></pre></pre>
+<h3 id="methods"><a class="header" href="#methods">Methods</a></h3>
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>// Bits per weight (including overhead)
+QuantType::Q4_K.bits_per_weight(); // 4.5
+
+// Compression ratio vs F32
+QuantType::Q4_K.compression_ratio(); // ~7.1x
+<span class="boring">}</span></code></pre></pre>
+<h2 id="quantization-comparison"><a class="header" href="#quantization-comparison">Quantization Comparison</a></h2>
+<div class="table-wrapper"><table><thead><tr><th>Type</th><th>Bits/Weight</th><th>Compression</th><th>7B Model Size</th></tr></thead><tbody>
+<tr><td>Q4_0</td><td>4.5</td><td>7.1x</td><td>3.9 GB</td></tr>
+<tr><td>Q4_K</td><td>4.5</td><td>7.1x</td><td>3.9 GB</td></tr>
+<tr><td>Q5_K</td><td>5.5</td><td>5.8x</td><td>4.8 GB</td></tr>
+<tr><td>Q6_K</td><td>6.5</td><td>4.9x</td><td>5.7 GB</td></tr>
+<tr><td>Q8_0</td><td>8.0</td><td>4.0x</td><td>7.0 GB</td></tr>
+<tr><td>F16</td><td>16.0</td><td>2.0x</td><td>14.0 GB</td></tr>
+<tr><td>F32</td><td>32.0</td><td>1.0x</td><td>28.0 GB</td></tr>
+</tbody></table>
+</div>
+<h2 id="k-quants"><a class="header" href="#k-quants">K-Quants</a></h2>
+<p>K-quants (Q4_K, Q5_K, Q6_K) use importance-based quantization:</p>
+<ol>
+<li>Compute weight importance scores</li>
+<li>Use higher precision for important weights</li>
+<li>Lower precision for less important weights</li>
+<li><strong>Better quality than basic quants</strong></li>
+</ol>
+<h2 id="choosing-quantization"><a class="header" href="#choosing-quantization">Choosing Quantization</a></h2>
+<h3 id="q4_k-recommended-for-most"><a class="header" href="#q4_k-recommended-for-most">Q4_K (Recommended for most)</a></h3>
+<ul>
+<li>Best compression/quality balance</li>
+<li>Fits 7B models in 8GB VRAM</li>
+<li>Suitable for consumer GPUs (RTX 3080, 4080)</li>
+</ul>
+<h3 id="q5_k"><a class="header" href="#q5_k">Q5_K</a></h3>
+<ul>
+<li>Better quality than Q4_K</li>
+<li>~20% more VRAM</li>
+<li>Good for prosumer GPUs (RTX 4090)</li>
+</ul>
+<h3 id="q6_k"><a class="header" href="#q6_k">Q6_K</a></h3>
+<ul>
+<li>Near-F16 quality</li>
+<li>~45% more VRAM than Q4_K</li>
+<li>For quality-critical applications</li>
+</ul>
+<h3 id="q8_0"><a class="header" href="#q8_0">Q8_0</a></h3>
+<ul>
+<li>Minimal quality loss</li>
+<li>2x VRAM of Q4_K</li>
+<li>When quality matters more than memory</li>
+</ul>
+<h3 id="f16"><a class="header" href="#f16">F16</a></h3>
+<ul>
+<li>Full precision inference</li>
+<li>Production servers with ample VRAM</li>
+<li>A100/H100 deployments</li>
+</ul>
+<h2 id="memory-calculation"><a class="header" href="#memory-calculation">Memory Calculation</a></h2>
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>fn estimate_memory_gb(params_billions: f64, quant: QuantType) -&gt; f64 {
+    let bits = quant.bits_per_weight() as f64;
+    let bytes = params_billions * 1_000_000_000.0 * bits / 8.0;
+    bytes / 1_000_000_000.0
+}
+
+// 7B model with Q4_K
+estimate_memory_gb(7.0, QuantType::Q4_K); // ~3.9 GB
+<span class="boring">}</span></code></pre></pre>
+<h2 id="gguf-format"><a class="header" href="#gguf-format">GGUF Format</a></h2>
+<p>GGUF (GPT-Generated Unified Format) is the standard for quantized models:</p>
+<ul>
+<li>Self-contained metadata</li>
+<li>Multiple quantization types</li>
+<li>Efficient memory mapping</li>
+<li>Cross-platform support</li>
+</ul>
+<p>TGI and llama.cpp both use GGUF for quantized inference.</p>
+<h2 id="example"><a class="header" href="#example">Example</a></h2>
+<pre><code class="language-bash">cargo run --example quantization
+</code></pre>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="../patterns/inference.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+
+                            <a rel="next prefetch" href="../examples/basic_router.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="../patterns/inference.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+
+                    <a rel="next prefetch" href="../examples/basic_router.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+            </nav>
+
+        </div>
+
+
+
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="../elasticlunr.min.js"></script>
+        <script src="../mark.min.js"></script>
+        <script src="../searcher.js"></script>
+
+        <script src="../clipboard.min.js"></script>
+        <script src="../highlight.js"></script>
+        <script src="../book.js"></script>
+
+        <!-- Custom JS scripts -->
+
+
+    </div>
+    </body>
+</html>

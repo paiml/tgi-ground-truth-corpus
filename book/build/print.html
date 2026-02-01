@@ -1,0 +1,1790 @@
+<!DOCTYPE HTML>
+<html lang="en" class="rust sidebar-visible" dir="ltr">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>TGI Ground Truth Corpus</title>
+        <meta name="robots" content="noindex">
+
+
+        <!-- Custom HTML head -->
+
+        <meta name="description" content="Production-ready inference serving patterns from HuggingFace TGI">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff">
+
+        <link rel="icon" href="favicon.svg">
+        <link rel="shortcut icon" href="favicon.png">
+        <link rel="stylesheet" href="css/variables.css">
+        <link rel="stylesheet" href="css/general.css">
+        <link rel="stylesheet" href="css/chrome.css">
+        <link rel="stylesheet" href="css/print.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="fonts/fonts.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" href="highlight.css">
+        <link rel="stylesheet" href="tomorrow-night.css">
+        <link rel="stylesheet" href="ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+
+
+        <!-- Provide site root to javascript -->
+        <script>
+            var path_to_root = "";
+            var default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "ayu" : "rust";
+        </script>
+        <!-- Start loading toc.js asap -->
+        <script src="toc.js"></script>
+    </head>
+    <body>
+    <div id="body-container">
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                var theme = localStorage.getItem('mdbook-theme');
+                var sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            var theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            const html = document.documentElement;
+            html.classList.remove('rust')
+            html.classList.add(theme);
+            html.classList.add("js");
+        </script>
+
+        <input type="checkbox" id="sidebar-toggle-anchor" class="hidden">
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            var sidebar = null;
+            var sidebar_toggle = document.getElementById("sidebar-toggle-anchor");
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
+            }
+            sidebar_toggle.checked = sidebar === 'visible';
+            html.classList.remove('sidebar-visible');
+            html.classList.add("sidebar-" + sidebar);
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            <!-- populated by js -->
+            <mdbook-sidebar-scrollbox class="sidebar-scrollbox"></mdbook-sidebar-scrollbox>
+            <noscript>
+                <iframe class="sidebar-iframe-outer" src="toc.html"></iframe>
+            </noscript>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle">
+                <div class="sidebar-resize-indicator"></div>
+            </div>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky">
+                    <div class="left-buttons">
+                        <label id="sidebar-toggle" class="icon-button" for="sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </label>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                        <button id="search-toggle" class="icon-button" type="button" title="Search. (Shortkey: s)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="S" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">TGI Ground Truth Corpus</h1>
+
+                    <div class="right-buttons">
+                        <a href="print.html" title="Print this book" aria-label="Print this book">
+                            <i id="print-button" class="fa fa-print"></i>
+                        </a>
+                        <a href="https://github.com/paiml/tgi-ground-truth-corpus" title="Git repository" aria-label="Git repository">
+                            <i id="git-repository-button" class="fa fa-github"></i>
+                        </a>
+
+                    </div>
+                </div>
+
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <h1 id="tgi-ground-truth-corpus"><a class="header" href="#tgi-ground-truth-corpus">TGI Ground Truth Corpus</a></h1>
+<p>Production-ready inference serving patterns extracted from HuggingFace's Text Generation Inference (TGI), implemented using the <strong>Sovereign AI Stack</strong>.</p>
+<h2 id="what-is-this"><a class="header" href="#what-is-this">What is This?</a></h2>
+<p>This corpus provides battle-tested patterns for building high-performance LLM inference servers. Each pattern is:</p>
+<ul>
+<li><strong>Extracted from TGI</strong> - HuggingFace's production inference server</li>
+<li><strong>Pure Rust</strong> - Using only Sovereign AI Stack crates</li>
+<li><strong>Thoroughly tested</strong> - 98%+ test coverage with property-based testing</li>
+<li><strong>Well documented</strong> - With TGI source references</li>
+</ul>
+<h2 id="why-tgi-patterns"><a class="header" href="#why-tgi-patterns">Why TGI Patterns?</a></h2>
+<p>TGI powers inference for:</p>
+<ul>
+<li>HuggingFace Inference API</li>
+<li>AWS SageMaker</li>
+<li>Google Cloud Vertex AI</li>
+<li>Thousands of production deployments</li>
+</ul>
+<p>The patterns in TGI represent years of production experience with:</p>
+<ul>
+<li>Continuous batching for GPU utilization</li>
+<li>Memory-efficient KV cache management</li>
+<li>Low-latency streaming responses</li>
+<li>Robust request validation</li>
+</ul>
+<h2 id="sovereign-ai-stack"><a class="header" href="#sovereign-ai-stack">Sovereign AI Stack</a></h2>
+<p>All patterns are implemented using only these crates:</p>
+<div class="table-wrapper"><table><thead><tr><th>Crate</th><th>Purpose</th></tr></thead><tbody>
+<tr><td><code>trueno</code></td><td>SIMD/GPU compute primitives</td></tr>
+<tr><td><code>aprender</code></td><td>ML algorithms, model formats</td></tr>
+<tr><td><code>realizar</code></td><td>Inference engine</td></tr>
+</tbody></table>
+</div>
+<p>No external ML framework dependencies. Pure Rust all the way down.</p>
+<h2 id="quick-start"><a class="header" href="#quick-start">Quick Start</a></h2>
+<p>Add to your <code>Cargo.toml</code>:</p>
+<pre><code class="language-toml">[dependencies]
+tgi-gtc = "0.1"
+</code></pre>
+<p>Run an example:</p>
+<pre><code class="language-bash">cargo run --example basic_router
+cargo run --example continuous_batching
+cargo run --example streaming_sse
+</code></pre>
+<h2 id="coverage"><a class="header" href="#coverage">Coverage</a></h2>
+<ul>
+<li><strong>124 tests</strong> (unit + property-based)</li>
+<li><strong>98.81% line coverage</strong></li>
+<li><strong>All files 95%+</strong></li>
+</ul>
+<h2 id="license"><a class="header" href="#license">License</a></h2>
+<p>Apache 2.0 - Same as TGI</p>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="router-pattern"><a class="header" href="#router-pattern">Router Pattern</a></h1>
+<p>HTTP routing with concurrency control, health checks, and metrics.</p>
+<h2 id="tgi-source"><a class="header" href="#tgi-source">TGI Source</a></h2>
+<p>Derived from <code>router/src/server.rs</code>:</p>
+<ul>
+<li>Axum-based HTTP server</li>
+<li>OpenAI-compatible <code>/v1/chat/completions</code> endpoint</li>
+<li>Health and readiness probes</li>
+<li>Prometheus metrics</li>
+</ul>
+<h2 id="sovereign-ai-stack-equivalent"><a class="header" href="#sovereign-ai-stack-equivalent">Sovereign AI Stack Equivalent</a></h2>
+<p>Maps to <code>realizar::serve</code> for model serving infrastructure.</p>
+<h2 id="key-components"><a class="header" href="#key-components">Key Components</a></h2>
+<h3 id="routerconfig"><a class="header" href="#routerconfig">RouterConfig</a></h3>
+<p>Configuration for the HTTP router:</p>
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>use tgi_gtc::router::RouterConfig;
+
+let config = RouterConfig::builder()
+    .port(8080)
+    .hostname("0.0.0.0")
+    .max_concurrent_requests(128)
+    .max_batch_size(32)
+    .timeout_secs(60)
+    .openai_compat(true)
+    .enable_metrics(true)
+    .build();
+<span class="boring">}</span></code></pre></pre>
+<h3 id="router"><a class="header" href="#router">Router</a></h3>
+<p>The main router with state management:</p>
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>use tgi_gtc::router::Router;
+
+let router = Router::new(config);
+
+// Mark ready after model loads
+router.set_ready(true);
+
+// Acquire request slots
+let guard = router.try_acquire()?;
+// ... handle request ...
+guard.complete(); // or guard.fail()
+<span class="boring">}</span></code></pre></pre>
+<h3 id="requestguard"><a class="header" href="#requestguard">RequestGuard</a></h3>
+<p>RAII guard for request slot management:</p>
+<ul>
+<li>Automatically releases slot on drop</li>
+<li>Tracks completed vs failed requests</li>
+<li>Prevents resource leaks on panic</li>
+</ul>
+<h3 id="health-status"><a class="header" href="#health-status">Health Status</a></h3>
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>let health = router.health();
+// health.status: "healthy" | "starting" | "unhealthy"
+// health.active_requests: current count
+// health.max_concurrent_requests: limit
+<span class="boring">}</span></code></pre></pre>
+<h3 id="metrics"><a class="header" href="#metrics">Metrics</a></h3>
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>let metrics = router.metrics();
+// metrics.total_requests
+// metrics.completed_requests
+// metrics.failed_requests
+// metrics.success_rate() -&gt; f64
+// metrics.utilization() -&gt; f64
+<span class="boring">}</span></code></pre></pre>
+<h2 id="design-patterns"><a class="header" href="#design-patterns">Design Patterns</a></h2>
+<h3 id="backpressure"><a class="header" href="#backpressure">Backpressure</a></h3>
+<p>The router implements backpressure through <code>max_concurrent_requests</code>:</p>
+<ol>
+<li>Each request acquires a slot via <code>try_acquire()</code></li>
+<li>If at capacity, returns <code>ResourceExhausted</code> error</li>
+<li>Client receives 429 Too Many Requests</li>
+<li>Slot released when guard drops</li>
+</ol>
+<h3 id="health-probes"><a class="header" href="#health-probes">Health Probes</a></h3>
+<p>TGI-style health endpoints:</p>
+<ul>
+<li><code>/health</code> - Always returns 200 (liveness)</li>
+<li><code>/ready</code> - Returns 200 only when ready (readiness)</li>
+</ul>
+<p>Use <code>is_ready()</code> to check readiness before accepting requests.</p>
+<h2 id="example"><a class="header" href="#example">Example</a></h2>
+<pre><code class="language-bash">cargo run --example basic_router
+</code></pre>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="continuous-batching-pattern"><a class="header" href="#continuous-batching-pattern">Continuous Batching Pattern</a></h1>
+<p>Dynamic batch formation for optimal GPU utilization.</p>
+<h2 id="tgi-source-1"><a class="header" href="#tgi-source-1">TGI Source</a></h2>
+<p>Derived from <code>backends/v3/src/queue.rs</code>:</p>
+<ul>
+<li>Continuous batching algorithm</li>
+<li>Prefill vs decode phase handling</li>
+<li>Dynamic batch formation</li>
+<li>Request prioritization</li>
+</ul>
+<h2 id="sovereign-ai-stack-equivalent-1"><a class="header" href="#sovereign-ai-stack-equivalent-1">Sovereign AI Stack Equivalent</a></h2>
+<p>Maps to <code>realizar::batch</code> for inference batching.</p>
+<h2 id="why-continuous-batching"><a class="header" href="#why-continuous-batching">Why Continuous Batching?</a></h2>
+<p>Traditional static batching:</p>
+<ol>
+<li>Wait for N requests</li>
+<li>Process all together</li>
+<li>Return all results</li>
+</ol>
+<p><strong>Problem</strong>: High latency for early arrivals, GPU idle while waiting.</p>
+<p>Continuous batching:</p>
+<ol>
+<li>Start inference immediately</li>
+<li>Dynamically add new requests</li>
+<li>Remove completed sequences</li>
+<li><strong>2-4x higher throughput</strong></li>
+</ol>
+<h2 id="key-components-1"><a class="header" href="#key-components-1">Key Components</a></h2>
+<h3 id="batchconfig"><a class="header" href="#batchconfig">BatchConfig</a></h3>
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>use tgi_gtc::batching::BatchConfig;
+
+let config = BatchConfig::builder()
+    .max_batch_size(32)       // Max requests per batch
+    .max_batch_tokens(4096)   // Token budget (prefill)
+    .min_batch_size(1)        // Don't wait if &gt;= this
+    .max_wait_ms(50)          // Max wait before forcing
+    .build();
+<span class="boring">}</span></code></pre></pre>
+<h3 id="batchrequest"><a class="header" href="#batchrequest">BatchRequest</a></h3>
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>use tgi_gtc::batching::BatchRequest;
+
+let request = BatchRequest::new(
+    id,           // Unique ID
+    input_tokens, // Prompt length
+    max_new_tokens // Generation limit
+).with_priority(10);
+<span class="boring">}</span></code></pre></pre>
+<h3 id="continuousbatcher"><a class="header" href="#continuousbatcher">ContinuousBatcher</a></h3>
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>use tgi_gtc::batching::ContinuousBatcher;
+
+let batcher = ContinuousBatcher::new(config);
+
+// Add requests
+batcher.add(request1);
+batcher.add(request2);
+
+// Form batch when ready
+if let Some(batch) = batcher.try_form_batch() {
+    // Process batch
+    for request in batch.requests {
+        // Run inference
+    }
+}
+<span class="boring">}</span></code></pre></pre>
+<h3 id="batch"><a class="header" href="#batch">Batch</a></h3>
+<p>Formed batch with metadata:</p>
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>let batch = batcher.try_form_batch().unwrap();
+batch.size()              // Number of requests
+batch.total_input_tokens  // Sum of input tokens
+batch.avg_wait_time()     // Average queue time
+batch.max_wait_time()     // Longest wait
+<span class="boring">}</span></code></pre></pre>
+<h2 id="batching-algorithm"><a class="header" href="#batching-algorithm">Batching Algorithm</a></h2>
+<ol>
+<li><strong>Check queue</strong>: Skip if empty</li>
+<li><strong>Check conditions</strong>:
+<ul>
+<li><code>queue.len() &gt;= min_batch_size</code>, OR</li>
+<li><code>oldest_request.wait_time &gt;= max_wait_ms</code></li>
+</ul>
+</li>
+<li><strong>Collect requests</strong> until:
+<ul>
+<li><code>batch.size() &gt;= max_batch_size</code>, OR</li>
+<li><code>batch.tokens &gt;= max_batch_tokens</code></li>
+</ul>
+</li>
+<li><strong>Return batch</strong> for processing</li>
+</ol>
+<h2 id="prefill-vs-decode"><a class="header" href="#prefill-vs-decode">Prefill vs Decode</a></h2>
+<h3 id="prefill-phase"><a class="header" href="#prefill-phase">Prefill Phase</a></h3>
+<ul>
+<li>Process input tokens</li>
+<li><strong>Compute-bound</strong> (parallelizable)</li>
+<li>Benefits from large batches</li>
+</ul>
+<h3 id="decode-phase"><a class="header" href="#decode-phase">Decode Phase</a></h3>
+<ul>
+<li>Generate output tokens</li>
+<li><strong>Memory-bound</strong> (sequential)</li>
+<li>KV cache access dominates</li>
+</ul>
+<p>TGI separates these phases for optimal scheduling.</p>
+<h2 id="example-1"><a class="header" href="#example-1">Example</a></h2>
+<pre><code class="language-bash">cargo run --example continuous_batching
+</code></pre>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="sse-streaming-pattern"><a class="header" href="#sse-streaming-pattern">SSE Streaming Pattern</a></h1>
+<p>Server-Sent Events for token-by-token delivery.</p>
+<h2 id="tgi-source-2"><a class="header" href="#tgi-source-2">TGI Source</a></h2>
+<p>Derived from <code>router/src/server.rs</code>:</p>
+<ul>
+<li>SSE event formatting</li>
+<li>Chunked token delivery</li>
+<li>Backpressure handling</li>
+</ul>
+<h2 id="sovereign-ai-stack-equivalent-2"><a class="header" href="#sovereign-ai-stack-equivalent-2">Sovereign AI Stack Equivalent</a></h2>
+<p>Maps to <code>realizar::stream</code> for streaming inference.</p>
+<h2 id="why-streaming"><a class="header" href="#why-streaming">Why Streaming?</a></h2>
+<p>Without streaming:</p>
+<ul>
+<li>Wait for full generation (seconds to minutes)</li>
+<li>Poor user experience</li>
+<li>Memory for full response</li>
+</ul>
+<p>With streaming:</p>
+<ul>
+<li>Tokens appear as generated</li>
+<li>Interactive feel</li>
+<li>Lower memory footprint</li>
+</ul>
+<h2 id="key-components-2"><a class="header" href="#key-components-2">Key Components</a></h2>
+<h3 id="streamevent"><a class="header" href="#streamevent">StreamEvent</a></h3>
+<p>Event types in the stream:</p>
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>use tgi_gtc::streaming::{StreamEvent, TokenEvent, CompleteEvent};
+
+enum StreamEvent {
+    Token(TokenEvent),      // Generated token
+    Complete(CompleteEvent), // Generation done
+    Error(String),          // Error occurred
+}
+<span class="boring">}</span></code></pre></pre>
+<h3 id="tokenevent"><a class="header" href="#tokenevent">TokenEvent</a></h3>
+<p>Individual token data:</p>
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>pub struct TokenEvent {
+    pub token: String,     // Token text
+    pub token_id: u32,     // Vocabulary ID
+    pub logprob: Option&lt;i32&gt;, // Log probability
+    pub special: bool,     // Is special token
+}
+<span class="boring">}</span></code></pre></pre>
+<h3 id="completeevent"><a class="header" href="#completeevent">CompleteEvent</a></h3>
+<p>Generation completion:</p>
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>pub struct CompleteEvent {
+    pub generated_tokens: usize,
+    pub finish_reason: FinishReason,
+    pub generation_time_ms: u64,
+}
+<span class="boring">}</span></code></pre></pre>
+<h3 id="finishreason"><a class="header" href="#finishreason">FinishReason</a></h3>
+<p>Why generation stopped:</p>
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>enum FinishReason {
+    Length,        // Hit max_new_tokens
+    Stop,          // Hit stop sequence
+    EndOfSequence, // Hit EOS token
+}
+<span class="boring">}</span></code></pre></pre>
+<h3 id="sseformatter"><a class="header" href="#sseformatter">SseFormatter</a></h3>
+<p>Format events as SSE:</p>
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>use tgi_gtc::streaming::SseFormatter;
+
+let mut formatter = SseFormatter::new();
+formatter.include_token_ids = true;
+formatter.include_logprobs = true;
+
+// Format token
+let sse = formatter.format_token(&amp;token_event);
+// "data: {\"token\":\"Hello\",\"token_id\":1234}\n\n"
+
+// Format completion
+let sse = formatter.format_complete(&amp;complete_event);
+// "data: {...}\n\ndata: [DONE]\n\n"
+
+// Format error
+let sse = formatter.format_error("Out of memory");
+// "data: {\"error\":\"Out of memory\"}\n\n"
+<span class="boring">}</span></code></pre></pre>
+<h2 id="sse-format"><a class="header" href="#sse-format">SSE Format</a></h2>
+<p>Server-Sent Events format:</p>
+<pre><code>data: {"token":"Hello"}\n
+\n
+data: {"token":" world"}\n
+\n
+data: {"generated_tokens":2,"finish_reason":"stop"}\n
+\n
+data: [DONE]\n
+\n
+</code></pre>
+<p>Key rules:</p>
+<ul>
+<li>Each event starts with <code>data: </code></li>
+<li>Events end with <code>\n\n</code> (double newline)</li>
+<li>JSON must be escaped (no raw newlines)</li>
+<li><code>[DONE]</code> signals end of stream</li>
+</ul>
+<h2 id="example-2"><a class="header" href="#example-2">Example</a></h2>
+<pre><code class="language-bash">cargo run --example streaming_sse
+</code></pre>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="request-validation-pattern"><a class="header" href="#request-validation-pattern">Request Validation Pattern</a></h1>
+<p>Input validation and token counting for safe inference.</p>
+<h2 id="tgi-source-3"><a class="header" href="#tgi-source-3">TGI Source</a></h2>
+<p>Derived from <code>router/src/validation.rs</code>:</p>
+<ul>
+<li>Input length validation</li>
+<li>Parameter range checking</li>
+<li>Token estimation</li>
+<li>Stop sequence validation</li>
+</ul>
+<h2 id="sovereign-ai-stack-equivalent-3"><a class="header" href="#sovereign-ai-stack-equivalent-3">Sovereign AI Stack Equivalent</a></h2>
+<p>Maps to <code>realizar::validate</code> for request validation.</p>
+<h2 id="why-validation"><a class="header" href="#why-validation">Why Validation?</a></h2>
+<p>Invalid requests can:</p>
+<ul>
+<li>Exhaust GPU memory (too many tokens)</li>
+<li>Cause numerical issues (invalid temperature)</li>
+<li>Block other requests (endless generation)</li>
+<li>Expose security vulnerabilities</li>
+</ul>
+<h2 id="key-components-3"><a class="header" href="#key-components-3">Key Components</a></h2>
+<h3 id="validationconfig"><a class="header" href="#validationconfig">ValidationConfig</a></h3>
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>use tgi_gtc::validation::ValidationConfig;
+
+let config = ValidationConfig::builder()
+    .max_input_tokens(4096)
+    .max_new_tokens(2048)
+    .max_total_tokens(8192)
+    .max_stop_sequences(4)
+    .max_stop_sequence_length(64)
+    .allow_empty_input(false)
+    .build();
+<span class="boring">}</span></code></pre></pre>
+<h3 id="generaterequest"><a class="header" href="#generaterequest">GenerateRequest</a></h3>
+<p>Request structure:</p>
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>use tgi_gtc::validation::GenerateRequest;
+
+// Simple request
+let request = GenerateRequest::simple("What is AI?");
+
+// With parameters
+let request = GenerateRequest::new("Explain quantum computing")
+    .max_new_tokens(500)
+    .temperature(0.7)
+    .top_p(0.9)
+    .top_k(50)
+    .repetition_penalty(1.1)
+    .stop_sequences(vec!["###".to_string()]);
+<span class="boring">}</span></code></pre></pre>
+<h3 id="requestvalidator"><a class="header" href="#requestvalidator">RequestValidator</a></h3>
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>use tgi_gtc::validation::RequestValidator;
+
+let validator = RequestValidator::new(config);
+
+// Validate single request
+match validator.validate(&amp;request) {
+    Ok(validated) =&gt; {
+        println!("Input tokens: {}", validated.estimated_input_tokens());
+        println!("Max new: {}", validated.max_new_tokens());
+    }
+    Err(e) =&gt; {
+        println!("Invalid: {}", e);
+    }
+}
+
+// Validate batch
+let validated = validator.validate_batch(&amp;requests)?;
+<span class="boring">}</span></code></pre></pre>
+<h3 id="validatedrequest"><a class="header" href="#validatedrequest">ValidatedRequest</a></h3>
+<p>Post-validation request:</p>
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>let validated = validator.validate(&amp;request)?;
+validated.inputs()                // Original input
+validated.estimated_input_tokens() // Token estimate
+validated.max_new_tokens()        // Clamped max
+validated.temperature()           // Validated temp
+validated.top_p()                 // Validated top_p
+<span class="boring">}</span></code></pre></pre>
+<h2 id="validation-rules"><a class="header" href="#validation-rules">Validation Rules</a></h2>
+<h3 id="temperature"><a class="header" href="#temperature">Temperature</a></h3>
+<ul>
+<li>Range: <code>0.0 &lt;= temp &lt;= 2.0</code></li>
+<li>Default: <code>1.0</code></li>
+<li><code>0.0</code> = deterministic</li>
+<li><code>&gt; 1.0</code> = more random</li>
+</ul>
+<h3 id="top-p-nucleus-sampling"><a class="header" href="#top-p-nucleus-sampling">Top-P (Nucleus Sampling)</a></h3>
+<ul>
+<li>Range: <code>0.0 &lt; top_p &lt;= 1.0</code></li>
+<li>Default: <code>1.0</code> (disabled)</li>
+<li><code>0.9</code> = consider tokens until 90% probability mass</li>
+</ul>
+<h3 id="top-k"><a class="header" href="#top-k">Top-K</a></h3>
+<ul>
+<li>Range: <code>0 &lt; top_k</code> (0 = disabled)</li>
+<li>Default: <code>0</code> (disabled)</li>
+<li><code>50</code> = consider only top 50 tokens</li>
+</ul>
+<h3 id="repetition-penalty"><a class="header" href="#repetition-penalty">Repetition Penalty</a></h3>
+<ul>
+<li>Range: <code>0.0 &lt; penalty</code></li>
+<li>Default: <code>1.0</code> (disabled)</li>
+<li><code>1.2</code> = reduce repeated token probability by 20%</li>
+</ul>
+<h3 id="token-limits"><a class="header" href="#token-limits">Token Limits</a></h3>
+<ul>
+<li><code>input_tokens &lt;= max_input_tokens</code></li>
+<li><code>max_new_tokens &lt;= config.max_new_tokens</code></li>
+<li><code>input_tokens + max_new_tokens &lt;= max_total_tokens</code></li>
+</ul>
+<h2 id="token-estimation"><a class="header" href="#token-estimation">Token Estimation</a></h2>
+<p>Simple character-based estimation:</p>
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>// ~4 characters per token (rough estimate)
+fn estimated_input_tokens(&amp;self) -&gt; usize {
+    (self.inputs.len() + 3) / 4
+}
+<span class="boring">}</span></code></pre></pre>
+<p>For production, use a proper tokenizer.</p>
+<h2 id="example-3"><a class="header" href="#example-3">Example</a></h2>
+<pre><code class="language-bash">cargo run --example request_validation
+</code></pre>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="scheduling-pattern"><a class="header" href="#scheduling-pattern">Scheduling Pattern</a></h1>
+<p>Fair request scheduling with priority queue management.</p>
+<h2 id="tgi-source-4"><a class="header" href="#tgi-source-4">TGI Source</a></h2>
+<p>Derived from <code>backends/v3/src/block_allocator.rs</code>:</p>
+<ul>
+<li>Block-based KV cache allocation</li>
+<li>Memory pool management</li>
+<li>Fair request scheduling</li>
+</ul>
+<h2 id="sovereign-ai-stack-equivalent-4"><a class="header" href="#sovereign-ai-stack-equivalent-4">Sovereign AI Stack Equivalent</a></h2>
+<p>Maps to <code>realizar::schedule</code> for inference scheduling.</p>
+<h2 id="key-components-4"><a class="header" href="#key-components-4">Key Components</a></h2>
+<h3 id="priority"><a class="header" href="#priority">Priority</a></h3>
+<p>Request priority levels:</p>
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>use tgi_gtc::scheduling::Priority;
+
+enum Priority {
+    Low,      // Background tasks
+    Normal,   // Default
+    High,     // Interactive
+    Critical, // System
+}
+<span class="boring">}</span></code></pre></pre>
+<p>Priority ordering: <code>Critical &gt; High &gt; Normal &gt; Low</code></p>
+<h3 id="scheduledtask"><a class="header" href="#scheduledtask">ScheduledTask</a></h3>
+<p>Task in the scheduler:</p>
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>use tgi_gtc::scheduling::ScheduledTask;
+
+let task = ScheduledTask::new(
+    id,              // Unique ID
+    estimated_tokens // Token estimate
+)
+.with_priority(Priority::High)
+.preemptible(false);  // Can't be preempted
+<span class="boring">}</span></code></pre></pre>
+<h3 id="schedulerconfig"><a class="header" href="#schedulerconfig">SchedulerConfig</a></h3>
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>use tgi_gtc::scheduling::SchedulerConfig;
+
+let config = SchedulerConfig {
+    max_queue_size: 1000,
+    priority_scheduling: true,
+    enable_preemption: true,
+};
+
+// Or with helper
+let config = SchedulerConfig::with_max_queue(500);
+<span class="boring">}</span></code></pre></pre>
+<h3 id="scheduler"><a class="header" href="#scheduler">Scheduler</a></h3>
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>use tgi_gtc::scheduling::Scheduler;
+
+let scheduler = Scheduler::new(config);
+
+// Generate IDs
+let id = scheduler.next_id();
+
+// Schedule task
+scheduler.schedule(task)?;
+
+// Get next task (priority order)
+if let Some(task) = scheduler.next() {
+    // Process task
+}
+
+// Peek without removing
+if let Some(task) = scheduler.peek() {
+    println!("Next: {:?}", task.priority);
+}
+
+// Cancel specific task
+scheduler.cancel(task_id);
+
+// Clear all
+let cancelled = scheduler.clear();
+<span class="boring">}</span></code></pre></pre>
+<h2 id="scheduling-algorithm"><a class="header" href="#scheduling-algorithm">Scheduling Algorithm</a></h2>
+<h3 id="priority-scheduling-enabled"><a class="header" href="#priority-scheduling-enabled">Priority Scheduling (enabled)</a></h3>
+<p>Tasks sorted by priority, FIFO within same priority:</p>
+<pre><code>Queue: [Critical-1, Critical-2, High-1, Normal-1, Low-1]
+       ^-- next()
+</code></pre>
+<h3 id="fifo-scheduling-disabled"><a class="header" href="#fifo-scheduling-disabled">FIFO Scheduling (disabled)</a></h3>
+<p>Pure first-in-first-out:</p>
+<pre><code>Queue: [Normal-1, High-1, Critical-1, Low-1]
+       ^-- next()
+</code></pre>
+<h2 id="preemption"><a class="header" href="#preemption">Preemption</a></h2>
+<p>When <code>enable_preemption</code> is true:</p>
+<ol>
+<li>Higher priority task arrives</li>
+<li>If running task is <code>preemptible</code>:
+<ul>
+<li>Pause current task</li>
+<li>Save KV cache state</li>
+<li>Run higher priority task</li>
+<li>Resume original task</li>
+</ul>
+</li>
+</ol>
+<p>Use <code>preemptible(false)</code> for tasks that can't be interrupted.</p>
+<h2 id="queue-management"><a class="header" href="#queue-management">Queue Management</a></h2>
+<h3 id="backpressure-1"><a class="header" href="#backpressure-1">Backpressure</a></h3>
+<p>When queue is full (<code>len &gt;= max_queue_size</code>):</p>
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>match scheduler.schedule(task) {
+    Ok(()) =&gt; println!("Scheduled"),
+    Err(e) =&gt; println!("Queue full: {}", e),
+}
+<span class="boring">}</span></code></pre></pre>
+<h3 id="cancellation"><a class="header" href="#cancellation">Cancellation</a></h3>
+<p>Cancel tasks that are no longer needed:</p>
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>// Cancel by ID
+if let Some(cancelled) = scheduler.cancel(task_id) {
+    println!("Cancelled task {}", cancelled.id);
+}
+
+// Clear all
+let cancelled = scheduler.clear();
+println!("Cancelled {} tasks", cancelled.len());
+<span class="boring">}</span></code></pre></pre>
+<h2 id="thread-safety"><a class="header" href="#thread-safety">Thread Safety</a></h2>
+<p>The scheduler uses <code>Mutex</code> for thread-safe access:</p>
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>// Safe to use from multiple threads
+let scheduler = Arc::new(Scheduler::default());
+
+// Thread 1
+scheduler.schedule(task1)?;
+
+// Thread 2
+if let Some(task) = scheduler.next() {
+    // Process
+}
+<span class="boring">}</span></code></pre></pre>
+<h2 id="example-4"><a class="header" href="#example-4">Example</a></h2>
+<pre><code class="language-bash">cargo run --example scheduler
+</code></pre>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="inference-backend-pattern"><a class="header" href="#inference-backend-pattern">Inference Backend Pattern</a></h1>
+<p>Backend initialization and model loading.</p>
+<h2 id="tgi-source-5"><a class="header" href="#tgi-source-5">TGI Source</a></h2>
+<p>Derived from <code>backends/v3/src/backend.rs</code>:</p>
+<ul>
+<li>Backend initialization</li>
+<li>Model loading</li>
+<li>Inference execution</li>
+</ul>
+<h2 id="sovereign-ai-stack-equivalent-5"><a class="header" href="#sovereign-ai-stack-equivalent-5">Sovereign AI Stack Equivalent</a></h2>
+<p>Maps to <code>realizar::inference</code> for model inference.</p>
+<h2 id="key-components-5"><a class="header" href="#key-components-5">Key Components</a></h2>
+<h3 id="datatype"><a class="header" href="#datatype">DataType</a></h3>
+<p>Supported inference data types:</p>
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>use tgi_gtc::inference::DataType;
+
+enum DataType {
+    Float32,  // 4 bytes, full precision
+    Float16,  // 2 bytes, half precision
+    BFloat16, // 2 bytes, brain float
+    Int8,     // 1 byte, quantized
+}
+
+// Get bytes per element
+DataType::Float16.bytes(); // 2
+
+// Get name
+DataType::Float16.name(); // "float16"
+<span class="boring">}</span></code></pre></pre>
+<h3 id="backendconfig"><a class="header" href="#backendconfig">BackendConfig</a></h3>
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>use tgi_gtc::inference::BackendConfig;
+
+let config = BackendConfig::new("meta-llama/Llama-2-7b-hf")
+    .device("cuda:0")
+    .dtype(DataType::Float16)
+    .max_sequence_length(4096)
+    .flash_attention(true);
+
+// Validate before use
+config.validate()?;
+<span class="boring">}</span></code></pre></pre>
+<h3 id="backendstate"><a class="header" href="#backendstate">BackendState</a></h3>
+<p>State machine for backend lifecycle:</p>
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>use tgi_gtc::inference::BackendState;
+
+enum BackendState {
+    Uninitialized, // Not started
+    Loading,       // Model loading
+    Ready,         // Ready for inference
+    Error,         // Error state
+}
+
+state.is_ready();  // true if Ready
+state.is_error();  // true if Error
+<span class="boring">}</span></code></pre></pre>
+<h3 id="inferencebackend"><a class="header" href="#inferencebackend">InferenceBackend</a></h3>
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>use tgi_gtc::inference::InferenceBackend;
+
+// Create backend
+let mut backend = InferenceBackend::new(config);
+// or
+let mut backend = InferenceBackend::with_model("gpt2");
+
+// Check state
+backend.state();    // BackendState
+backend.is_ready(); // bool
+
+// Initialize (load model)
+backend.initialize()?;
+
+// Handle errors
+backend.set_error();
+
+// Reset to uninitialized
+backend.reset();
+
+// Access config
+backend.config().model_id;
+<span class="boring">}</span></code></pre></pre>
+<h2 id="lifecycle"><a class="header" href="#lifecycle">Lifecycle</a></h2>
+<pre><code>┌──────────────┐
+│ Uninitialized│
+└──────┬───────┘
+       │ initialize()
+       ▼
+┌──────────────┐
+│   Loading    │
+└──────┬───────┘
+       │ success
+       ▼
+┌──────────────┐     set_error()     ┌──────────────┐
+│    Ready     │────────────────────▶│    Error     │
+└──────────────┘                     └──────┬───────┘
+       ▲                                    │
+       │              reset()               │
+       └────────────────────────────────────┘
+</code></pre>
+<h2 id="configuration-validation"><a class="header" href="#configuration-validation">Configuration Validation</a></h2>
+<p>The <code>validate()</code> method checks:</p>
+<ol>
+<li><strong>model_id</strong>: Must not be empty</li>
+<li><strong>max_sequence_length</strong>: Must be &gt; 0</li>
+</ol>
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>// Valid
+BackendConfig::new("gpt2").validate()?; // Ok
+
+// Invalid - empty model
+BackendConfig::default().validate()?; // Err
+
+// Invalid - zero sequence length
+BackendConfig::new("gpt2")
+    .max_sequence_length(0)
+    .validate()?; // Err
+<span class="boring">}</span></code></pre></pre>
+<h2 id="device-selection"><a class="header" href="#device-selection">Device Selection</a></h2>
+<p>Common device strings:</p>
+<div class="table-wrapper"><table><thead><tr><th>Device</th><th>Description</th></tr></thead><tbody>
+<tr><td><code>cpu</code></td><td>CPU inference</td></tr>
+<tr><td><code>cuda:0</code></td><td>First NVIDIA GPU</td></tr>
+<tr><td><code>cuda:1</code></td><td>Second NVIDIA GPU</td></tr>
+<tr><td><code>mps</code></td><td>Apple Metal (M1/M2)</td></tr>
+</tbody></table>
+</div>
+<h2 id="data-type-selection"><a class="header" href="#data-type-selection">Data Type Selection</a></h2>
+<div class="table-wrapper"><table><thead><tr><th>Type</th><th>Bytes</th><th>Use Case</th></tr></thead><tbody>
+<tr><td><code>Float32</code></td><td>4</td><td>Full precision, debugging</td></tr>
+<tr><td><code>Float16</code></td><td>2</td><td>Production, most GPUs</td></tr>
+<tr><td><code>BFloat16</code></td><td>2</td><td>A100/H100, better range</td></tr>
+<tr><td><code>Int8</code></td><td>1</td><td>Quantized, memory limited</td></tr>
+</tbody></table>
+</div>
+<h2 id="example-5"><a class="header" href="#example-5">Example</a></h2>
+<pre><code class="language-bash">cargo run --example inference_backend
+</code></pre>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="quantization-pattern"><a class="header" href="#quantization-pattern">Quantization Pattern</a></h1>
+<p>Model quantization types and compression.</p>
+<h2 id="tgi-source-6"><a class="header" href="#tgi-source-6">TGI Source</a></h2>
+<p>Derived from <code>backends/llamacpp/src/quantize.rs</code>:</p>
+<ul>
+<li>GGUF format support</li>
+<li>Dequantization kernels</li>
+<li>Mixed precision inference</li>
+</ul>
+<h2 id="sovereign-ai-stack-equivalent-6"><a class="header" href="#sovereign-ai-stack-equivalent-6">Sovereign AI Stack Equivalent</a></h2>
+<p>Maps to <code>aprender::quantize</code> for model quantization.</p>
+<h2 id="key-components-6"><a class="header" href="#key-components-6">Key Components</a></h2>
+<h3 id="quanttype"><a class="header" href="#quanttype">QuantType</a></h3>
+<p>Supported quantization types:</p>
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>use tgi_gtc::quantization::QuantType;
+
+enum QuantType {
+    Q4_0,   // 4-bit basic
+    Q4_K,   // 4-bit K-quants
+    Q5_K,   // 5-bit K-quants
+    Q6_K,   // 6-bit K-quants
+    Q8_0,   // 8-bit basic
+    F16,    // 16-bit float
+    F32,    // 32-bit float
+}
+<span class="boring">}</span></code></pre></pre>
+<h3 id="methods"><a class="header" href="#methods">Methods</a></h3>
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>// Bits per weight (including overhead)
+QuantType::Q4_K.bits_per_weight(); // 4.5
+
+// Compression ratio vs F32
+QuantType::Q4_K.compression_ratio(); // ~7.1x
+<span class="boring">}</span></code></pre></pre>
+<h2 id="quantization-comparison"><a class="header" href="#quantization-comparison">Quantization Comparison</a></h2>
+<div class="table-wrapper"><table><thead><tr><th>Type</th><th>Bits/Weight</th><th>Compression</th><th>7B Model Size</th></tr></thead><tbody>
+<tr><td>Q4_0</td><td>4.5</td><td>7.1x</td><td>3.9 GB</td></tr>
+<tr><td>Q4_K</td><td>4.5</td><td>7.1x</td><td>3.9 GB</td></tr>
+<tr><td>Q5_K</td><td>5.5</td><td>5.8x</td><td>4.8 GB</td></tr>
+<tr><td>Q6_K</td><td>6.5</td><td>4.9x</td><td>5.7 GB</td></tr>
+<tr><td>Q8_0</td><td>8.0</td><td>4.0x</td><td>7.0 GB</td></tr>
+<tr><td>F16</td><td>16.0</td><td>2.0x</td><td>14.0 GB</td></tr>
+<tr><td>F32</td><td>32.0</td><td>1.0x</td><td>28.0 GB</td></tr>
+</tbody></table>
+</div>
+<h2 id="k-quants"><a class="header" href="#k-quants">K-Quants</a></h2>
+<p>K-quants (Q4_K, Q5_K, Q6_K) use importance-based quantization:</p>
+<ol>
+<li>Compute weight importance scores</li>
+<li>Use higher precision for important weights</li>
+<li>Lower precision for less important weights</li>
+<li><strong>Better quality than basic quants</strong></li>
+</ol>
+<h2 id="choosing-quantization"><a class="header" href="#choosing-quantization">Choosing Quantization</a></h2>
+<h3 id="q4_k-recommended-for-most"><a class="header" href="#q4_k-recommended-for-most">Q4_K (Recommended for most)</a></h3>
+<ul>
+<li>Best compression/quality balance</li>
+<li>Fits 7B models in 8GB VRAM</li>
+<li>Suitable for consumer GPUs (RTX 3080, 4080)</li>
+</ul>
+<h3 id="q5_k"><a class="header" href="#q5_k">Q5_K</a></h3>
+<ul>
+<li>Better quality than Q4_K</li>
+<li>~20% more VRAM</li>
+<li>Good for prosumer GPUs (RTX 4090)</li>
+</ul>
+<h3 id="q6_k"><a class="header" href="#q6_k">Q6_K</a></h3>
+<ul>
+<li>Near-F16 quality</li>
+<li>~45% more VRAM than Q4_K</li>
+<li>For quality-critical applications</li>
+</ul>
+<h3 id="q8_0"><a class="header" href="#q8_0">Q8_0</a></h3>
+<ul>
+<li>Minimal quality loss</li>
+<li>2x VRAM of Q4_K</li>
+<li>When quality matters more than memory</li>
+</ul>
+<h3 id="f16"><a class="header" href="#f16">F16</a></h3>
+<ul>
+<li>Full precision inference</li>
+<li>Production servers with ample VRAM</li>
+<li>A100/H100 deployments</li>
+</ul>
+<h2 id="memory-calculation"><a class="header" href="#memory-calculation">Memory Calculation</a></h2>
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>fn estimate_memory_gb(params_billions: f64, quant: QuantType) -&gt; f64 {
+    let bits = quant.bits_per_weight() as f64;
+    let bytes = params_billions * 1_000_000_000.0 * bits / 8.0;
+    bytes / 1_000_000_000.0
+}
+
+// 7B model with Q4_K
+estimate_memory_gb(7.0, QuantType::Q4_K); // ~3.9 GB
+<span class="boring">}</span></code></pre></pre>
+<h2 id="gguf-format"><a class="header" href="#gguf-format">GGUF Format</a></h2>
+<p>GGUF (GPT-Generated Unified Format) is the standard for quantized models:</p>
+<ul>
+<li>Self-contained metadata</li>
+<li>Multiple quantization types</li>
+<li>Efficient memory mapping</li>
+<li>Cross-platform support</li>
+</ul>
+<p>TGI and llama.cpp both use GGUF for quantized inference.</p>
+<h2 id="example-6"><a class="header" href="#example-6">Example</a></h2>
+<pre><code class="language-bash">cargo run --example quantization
+</code></pre>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="basic-router-example"><a class="header" href="#basic-router-example">Basic Router Example</a></h1>
+<p>Demonstrates TGI-style HTTP router setup with health checks and request limiting.</p>
+<h2 id="run"><a class="header" href="#run">Run</a></h2>
+<pre><code class="language-bash">cargo run --example basic_router
+</code></pre>
+<h2 id="output"><a class="header" href="#output">Output</a></h2>
+<pre><code>=== TGI Router Pattern Demo ===
+
+Router Configuration:
+  Bind address: 0.0.0.0:8080
+  Max concurrent: 128
+  Max batch size: 32
+  OpenAI compat: true
+
+Initial Health Status:
+  Status: starting
+  Active requests: 0
+
+Router marked as ready (model loaded)
+Health Status After Ready:
+  Status: healthy
+
+Simulating request handling...
+  Active requests: 2
+  Request 1 completed successfully
+  Request 2 failed
+
+Final Metrics:
+  Total requests: 2
+  Completed: 1
+  Failed: 1
+  Success rate: 50.0%
+  Utilization: 0.0%
+
+=== Demo Complete ===
+</code></pre>
+<h2 id="code-walkthrough"><a class="header" href="#code-walkthrough">Code Walkthrough</a></h2>
+<h3 id="1-configure-router"><a class="header" href="#1-configure-router">1. Configure Router</a></h3>
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>let config = RouterConfig::builder()
+    .port(8080)
+    .hostname("0.0.0.0")
+    .max_concurrent_requests(128)
+    .max_batch_size(32)
+    .timeout_secs(60)
+    .openai_compat(true)
+    .enable_metrics(true)
+    .build();
+<span class="boring">}</span></code></pre></pre>
+<h3 id="2-create-router-and-set-ready"><a class="header" href="#2-create-router-and-set-ready">2. Create Router and Set Ready</a></h3>
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>let router = Router::new(config);
+router.set_ready(true);
+<span class="boring">}</span></code></pre></pre>
+<h3 id="3-handle-requests-with-guards"><a class="header" href="#3-handle-requests-with-guards">3. Handle Requests with Guards</a></h3>
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>let guard = router.try_acquire()?;
+// ... process request ...
+guard.complete(); // or guard.fail()
+<span class="boring">}</span></code></pre></pre>
+<h3 id="4-check-metrics"><a class="header" href="#4-check-metrics">4. Check Metrics</a></h3>
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>let metrics = router.metrics();
+println!("Success rate: {:.1}%", metrics.success_rate() * 100.0);
+<span class="boring">}</span></code></pre></pre>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="continuous-batching-example"><a class="header" href="#continuous-batching-example">Continuous Batching Example</a></h1>
+<p>Demonstrates TGI's continuous batching algorithm for optimal GPU utilization.</p>
+<h2 id="run-1"><a class="header" href="#run-1">Run</a></h2>
+<pre><code class="language-bash">cargo run --example continuous_batching
+</code></pre>
+<h2 id="output-1"><a class="header" href="#output-1">Output</a></h2>
+<pre><code>=== Continuous Batching Demo ===
+
+Batcher Configuration:
+  Max batch size: 8
+  Max batch tokens: 2048
+  Min batch size: 2
+  Max wait: 50ms
+
+Simulating incoming requests...
+
+  Added request 1: Short prompt (50 input, 100 max new)
+  Added request 2: Medium prompt (150 input, 200 max new)
+  Added request 3: Long prompt (300 input, 150 max new)
+  Added request 4: Another short (75 input, 50 max new)
+  Added request 5: Complex query (200 input, 300 max new)
+  Added request 6: Simple ask (25 input, 50 max new)
+
+Queue length: 6
+
+Forming batches...
+
+Batch 1:
+  Requests: 6
+  Total input tokens: 800
+  Request IDs: [1, 2, 3, 4, 5, 6]
+
+=== Demo Complete ===
+</code></pre>
+<h2 id="code-walkthrough-1"><a class="header" href="#code-walkthrough-1">Code Walkthrough</a></h2>
+<h3 id="1-configure-batcher"><a class="header" href="#1-configure-batcher">1. Configure Batcher</a></h3>
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>let config = BatchConfig::builder()
+    .max_batch_size(8)
+    .max_batch_tokens(2048)
+    .min_batch_size(2)
+    .max_wait_ms(50)
+    .build();
+<span class="boring">}</span></code></pre></pre>
+<h3 id="2-add-requests"><a class="header" href="#2-add-requests">2. Add Requests</a></h3>
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>let batcher = ContinuousBatcher::new(config);
+
+let request = BatchRequest::new(id, input_tokens, max_new_tokens);
+batcher.add(request);
+<span class="boring">}</span></code></pre></pre>
+<h3 id="3-form-batches"><a class="header" href="#3-form-batches">3. Form Batches</a></h3>
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>while let Some(batch) = batcher.try_form_batch() {
+    println!("Batch size: {}", batch.size());
+    println!("Total tokens: {}", batch.total_input_tokens);
+
+    for request in batch.requests {
+        // Process each request
+    }
+}
+<span class="boring">}</span></code></pre></pre>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="streaming-sse-example"><a class="header" href="#streaming-sse-example">Streaming SSE Example</a></h1>
+<p>Demonstrates TGI's Server-Sent Events streaming for token-by-token delivery.</p>
+<h2 id="run-2"><a class="header" href="#run-2">Run</a></h2>
+<pre><code class="language-bash">cargo run --example streaming_sse
+</code></pre>
+<h2 id="output-2"><a class="header" href="#output-2">Output</a></h2>
+<pre><code>=== SSE Streaming Demo ===
+
+Formatter Configuration:
+  Include token IDs: true
+  Include logprobs: true
+
+Simulated Token Stream:
+============================================================
+data: {"token":"Hello","token_id":1234,"logprob":-50}
+
+data: {"token":",","token_id":44,"logprob":-10}
+
+data: {"token":" world","token_id":5678,"logprob":-75}
+
+data: {"token":"!","token_id":999,"logprob":-25}
+
+data: {"token":"&lt;|endoftext|&gt;","token_id":0,"special":true}
+
+data: {"generated_tokens":5,"finish_reason":"eos","generation_time_ms":125}
+
+data: [DONE]
+
+============================================================
+
+Error Event Example:
+----------------------------------------
+data: {"error":"Model inference failed: out of memory"}
+
+----------------------------------------
+
+Finish Reasons:
+  Length: length
+  Stop: stop
+  EOS: eos
+
+=== Demo Complete ===
+</code></pre>
+<h2 id="code-walkthrough-2"><a class="header" href="#code-walkthrough-2">Code Walkthrough</a></h2>
+<h3 id="1-create-formatter"><a class="header" href="#1-create-formatter">1. Create Formatter</a></h3>
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>let mut formatter = SseFormatter::new();
+formatter.include_token_ids = true;
+formatter.include_logprobs = true;
+<span class="boring">}</span></code></pre></pre>
+<h3 id="2-format-token-events"><a class="header" href="#2-format-token-events">2. Format Token Events</a></h3>
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>let event = TokenEvent {
+    token: "Hello".to_string(),
+    token_id: 1234,
+    logprob: Some(-50),
+    special: false,
+};
+
+let sse = formatter.format_token(&amp;event);
+print!("{}", sse);
+<span class="boring">}</span></code></pre></pre>
+<h3 id="3-format-completion"><a class="header" href="#3-format-completion">3. Format Completion</a></h3>
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>let complete = CompleteEvent {
+    generated_tokens: 5,
+    finish_reason: FinishReason::EndOfSequence,
+    generation_time_ms: 125,
+};
+
+let sse = formatter.format_complete(&amp;complete);
+print!("{}", sse);
+<span class="boring">}</span></code></pre></pre>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="request-validation-example"><a class="header" href="#request-validation-example">Request Validation Example</a></h1>
+<p>Demonstrates TGI's request validation patterns.</p>
+<h2 id="run-3"><a class="header" href="#run-3">Run</a></h2>
+<pre><code class="language-bash">cargo run --example request_validation
+</code></pre>
+<h2 id="output-3"><a class="header" href="#output-3">Output</a></h2>
+<pre><code>=== Request Validation Demo ===
+
+Validation Configuration:
+  Max input tokens: 4096
+  Max new tokens: 2048
+  Max total tokens: 8192
+  Max stop sequences: 4
+
+Validation Results:
+------------------------------------------------------------
+Valid simple request: ✓ VALID
+    Input tokens: ~7, Max new: 2048
+
+Valid with parameters: ✓ VALID
+    Input tokens: ~6, Max new: 500
+
+Invalid temperature (too high): ✗ INVALID
+    Error: validation error: temperature must be between 0.0 and 2.0
+
+Invalid temperature (negative): ✗ INVALID
+    Error: validation error: temperature must be between 0.0 and 2.0
+
+Invalid top_p (too high): ✗ INVALID
+    Error: validation error: top_p must be between 0.0 and 1.0
+
+Empty input (not allowed): ✗ INVALID
+    Error: validation error: empty input not allowed
+
+Too many stop sequences: ✗ INVALID
+    Error: validation error: too many stop sequences (max 4)
+
+
+Batch Validation:
+------------------------------------------------------------
+✓ Batch valid: 3 requests
+    Request 1: ~2 input tokens
+    Request 2: ~2 input tokens
+    Request 3: ~2 input tokens
+
+=== Demo Complete ===
+</code></pre>
+<h2 id="code-walkthrough-3"><a class="header" href="#code-walkthrough-3">Code Walkthrough</a></h2>
+<h3 id="1-configure-validator"><a class="header" href="#1-configure-validator">1. Configure Validator</a></h3>
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>let config = ValidationConfig::builder()
+    .max_input_tokens(4096)
+    .max_new_tokens(2048)
+    .max_total_tokens(8192)
+    .max_stop_sequences(4)
+    .allow_empty_input(false)
+    .build();
+
+let validator = RequestValidator::new(config);
+<span class="boring">}</span></code></pre></pre>
+<h3 id="2-create-requests"><a class="header" href="#2-create-requests">2. Create Requests</a></h3>
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>// Simple request
+let request = GenerateRequest::simple("What is AI?");
+
+// With parameters
+let request = GenerateRequest::new("Explain quantum")
+    .max_new_tokens(500)
+    .temperature(0.7)
+    .top_p(0.9);
+<span class="boring">}</span></code></pre></pre>
+<h3 id="3-validate"><a class="header" href="#3-validate">3. Validate</a></h3>
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>match validator.validate(&amp;request) {
+    Ok(validated) =&gt; {
+        println!("Input tokens: {}", validated.estimated_input_tokens());
+    }
+    Err(e) =&gt; {
+        println!("Invalid: {}", e);
+    }
+}
+<span class="boring">}</span></code></pre></pre>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="inference-backend-example"><a class="header" href="#inference-backend-example">Inference Backend Example</a></h1>
+<p>Demonstrates TGI's backend initialization patterns.</p>
+<h2 id="run-4"><a class="header" href="#run-4">Run</a></h2>
+<pre><code class="language-bash">cargo run --example inference_backend
+</code></pre>
+<h2 id="output-4"><a class="header" href="#output-4">Output</a></h2>
+<pre><code>=== Inference Backend Demo ===
+
+Backend Configuration:
+  Model: meta-llama/Llama-2-7b-hf
+  Device: cuda:0
+  DType: float16 (2 bytes/element)
+  Max sequence length: 4096
+  Flash attention: true
+
+Backend State Transitions:
+  Initial: Uninitialized
+  Initializing...
+  After init: Ready
+  Simulating error...
+  After error: Error
+  Resetting...
+  After reset: Uninitialized
+
+Supported Data Types:
+----------------------------------------
+  float32    - 4 bytes/element
+  float16    - 2 bytes/element
+  bfloat16   - 2 bytes/element
+  int8       - 1 bytes/element
+
+Configuration Validation:
+----------------------------------------
+  Valid config: Ok(())
+  Empty model: Err(config error: model_id is required)
+  Zero seq len: Err(config error: max_sequence_length must be &gt; 0)
+
+=== Demo Complete ===
+</code></pre>
+<h2 id="code-walkthrough-4"><a class="header" href="#code-walkthrough-4">Code Walkthrough</a></h2>
+<h3 id="1-configure-backend"><a class="header" href="#1-configure-backend">1. Configure Backend</a></h3>
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>let config = BackendConfig::new("meta-llama/Llama-2-7b-hf")
+    .device("cuda:0")
+    .dtype(DataType::Float16)
+    .max_sequence_length(4096)
+    .flash_attention(true);
+<span class="boring">}</span></code></pre></pre>
+<h3 id="2-create-and-initialize"><a class="header" href="#2-create-and-initialize">2. Create and Initialize</a></h3>
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>let mut backend = InferenceBackend::new(config);
+backend.initialize()?;
+assert!(backend.is_ready());
+<span class="boring">}</span></code></pre></pre>
+<h3 id="3-handle-state-changes"><a class="header" href="#3-handle-state-changes">3. Handle State Changes</a></h3>
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>// Error state
+backend.set_error();
+assert!(backend.state().is_error());
+
+// Reset
+backend.reset();
+assert_eq!(backend.state(), BackendState::Uninitialized);
+<span class="boring">}</span></code></pre></pre>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="scheduler-example"><a class="header" href="#scheduler-example">Scheduler Example</a></h1>
+<p>Demonstrates TGI's fair request scheduling with priority queues.</p>
+<h2 id="run-5"><a class="header" href="#run-5">Run</a></h2>
+<pre><code class="language-bash">cargo run --example scheduler
+</code></pre>
+<h2 id="output-5"><a class="header" href="#output-5">Output</a></h2>
+<pre><code>=== Request Scheduler Demo ===
+
+Scheduler Configuration:
+  Max queue size: 100
+  Priority scheduling: true
+  Enable preemption: true
+
+Adding tasks with different priorities...
+
+  Scheduled task 1: Normal priority - User chat message (100 tokens)
+  Scheduled task 2: Low priority - Background summarization (500 tokens)
+  Scheduled task 3: High priority - Interactive completion (50 tokens)
+  Scheduled task 4: Normal priority - API request (200 tokens)
+  Scheduled task 5: Critical priority - System health check (1000 tokens)
+  Scheduled task 6: Low priority - Batch processing (150 tokens)
+
+Queue length: 6
+
+Processing tasks (priority order):
+--------------------------------------------------
+  Processing task 5: Critical priority, 1000 tokens, preemptible: true
+  Processing task 3: High priority, 50 tokens, preemptible: true
+  Processing task 1: Normal priority, 100 tokens, preemptible: true
+  Processing task 4: Normal priority, 200 tokens, preemptible: true
+  Processing task 2: Low priority, 500 tokens, preemptible: true
+  Processing task 6: Low priority, 150 tokens, preemptible: true
+
+Queue empty: true
+</code></pre>
+<h2 id="code-walkthrough-5"><a class="header" href="#code-walkthrough-5">Code Walkthrough</a></h2>
+<h3 id="1-configure-scheduler"><a class="header" href="#1-configure-scheduler">1. Configure Scheduler</a></h3>
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>let config = SchedulerConfig {
+    max_queue_size: 100,
+    priority_scheduling: true,
+    enable_preemption: true,
+};
+
+let scheduler = Scheduler::new(config);
+<span class="boring">}</span></code></pre></pre>
+<h3 id="2-schedule-tasks"><a class="header" href="#2-schedule-tasks">2. Schedule Tasks</a></h3>
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>let task = ScheduledTask::new(id, tokens)
+    .with_priority(Priority::High);
+
+scheduler.schedule(task)?;
+<span class="boring">}</span></code></pre></pre>
+<h3 id="3-process-in-priority-order"><a class="header" href="#3-process-in-priority-order">3. Process in Priority Order</a></h3>
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>while let Some(task) = scheduler.next() {
+    println!("Processing: {:?}", task.priority);
+}
+<span class="boring">}</span></code></pre></pre>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="quantization-example"><a class="header" href="#quantization-example">Quantization Example</a></h1>
+<p>Demonstrates TGI's quantization types and compression characteristics.</p>
+<h2 id="run-6"><a class="header" href="#run-6">Run</a></h2>
+<pre><code class="language-bash">cargo run --example quantization
+</code></pre>
+<h2 id="output-6"><a class="header" href="#output-6">Output</a></h2>
+<pre><code>=== Quantization Types Demo ===
+
+GGUF Quantization Formats:
+============================================================
+Type          Bits/Weight     Compression Ratio   Memory (7B)
+------------------------------------------------------------
+Q4_0                  4.5                 7.1x       3.9 GB
+Q4_K                  4.5                 7.1x       3.9 GB
+Q5_K                  5.5                 5.8x       4.8 GB
+Q6_K                  6.5                 4.9x       5.7 GB
+Q8_0                  8.0                 4.0x       7.0 GB
+F16                  16.0                 2.0x      14.0 GB
+F32                  32.0                 1.0x      28.0 GB
+============================================================
+
+Memory Savings for 7B Model:
+----------------------------------------
+  F32 baseline: 28.0 GB
+  Q4_K: 3.9 GB (86% smaller)
+  Q8_0: 7.0 GB (75% smaller)
+  F16: 14.0 GB (50% smaller)
+
+Recommendations:
+----------------------------------------
+  • Q4_K: Best for consumer GPUs (RTX 3080/4080)
+  • Q5_K: Balanced quality/size for prosumer GPUs
+  • Q8_0: High quality, needs more VRAM
+  • F16: Full precision, production servers
+
+=== Demo Complete ===
+</code></pre>
+<h2 id="code-walkthrough-6"><a class="header" href="#code-walkthrough-6">Code Walkthrough</a></h2>
+<h3 id="1-query-quantization-properties"><a class="header" href="#1-query-quantization-properties">1. Query Quantization Properties</a></h3>
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>use tgi_gtc::quantization::QuantType;
+
+let qtype = QuantType::Q4_K;
+
+// Bits per weight
+let bits = qtype.bits_per_weight(); // 4.5
+
+// Compression vs F32
+let ratio = qtype.compression_ratio(); // ~7.1x
+<span class="boring">}</span></code></pre></pre>
+<h3 id="2-calculate-memory"><a class="header" href="#2-calculate-memory">2. Calculate Memory</a></h3>
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>fn memory_gb(params_b: f64, qtype: QuantType) -&gt; f64 {
+    let bits = qtype.bits_per_weight() as f64;
+    (params_b * 1e9 * bits / 8.0) / 1e9
+}
+
+// 7B model with Q4_K
+memory_gb(7.0, QuantType::Q4_K); // ~3.9 GB
+<span class="boring">}</span></code></pre></pre>
+<h3 id="3-compare-types"><a class="header" href="#3-compare-types">3. Compare Types</a></h3>
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>let types = [QuantType::Q4_K, QuantType::Q8_0, QuantType::F16];
+
+for qtype in types {
+    println!("{:?}: {:.1}x compression",
+        qtype, qtype.compression_ratio());
+}
+<span class="boring">}</span></code></pre></pre>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="api-documentation"><a class="header" href="#api-documentation">API Documentation</a></h1>
+<p>Full API documentation is available on docs.rs:</p>
+<p><strong><a href="https://docs.rs/tgi-gtc">docs.rs/tgi-gtc</a></strong></p>
+<h2 id="module-overview"><a class="header" href="#module-overview">Module Overview</a></h2>
+<h3 id="tgi_gtcrouter"><a class="header" href="#tgi_gtcrouter"><code>tgi_gtc::router</code></a></h3>
+<p>HTTP routing with concurrency control.</p>
+<ul>
+<li><code>RouterConfig</code> - Configuration builder</li>
+<li><code>Router</code> - Main router instance</li>
+<li><code>RouterState</code> - Request tracking</li>
+<li><code>RequestGuard</code> - RAII slot guard</li>
+<li><code>HealthStatus</code> - Health probe response</li>
+<li><code>RouterMetrics</code> - Prometheus-style metrics</li>
+</ul>
+<h3 id="tgi_gtcbatching"><a class="header" href="#tgi_gtcbatching"><code>tgi_gtc::batching</code></a></h3>
+<p>Continuous batching for GPU utilization.</p>
+<ul>
+<li><code>BatchConfig</code> - Batching configuration</li>
+<li><code>BatchRequest</code> - Individual request</li>
+<li><code>Batch</code> - Formed batch</li>
+<li><code>ContinuousBatcher</code> - Main batcher</li>
+</ul>
+<h3 id="tgi_gtcstreaming"><a class="header" href="#tgi_gtcstreaming"><code>tgi_gtc::streaming</code></a></h3>
+<p>SSE streaming for token delivery.</p>
+<ul>
+<li><code>StreamEvent</code> - Event enum</li>
+<li><code>TokenEvent</code> - Token data</li>
+<li><code>CompleteEvent</code> - Completion data</li>
+<li><code>FinishReason</code> - Why generation stopped</li>
+<li><code>SseFormatter</code> - Event formatter</li>
+</ul>
+<h3 id="tgi_gtcvalidation"><a class="header" href="#tgi_gtcvalidation"><code>tgi_gtc::validation</code></a></h3>
+<p>Request validation and limits.</p>
+<ul>
+<li><code>ValidationConfig</code> - Validation rules</li>
+<li><code>GenerateRequest</code> - Request builder</li>
+<li><code>RequestValidator</code> - Validator instance</li>
+<li><code>ValidatedRequest</code> - Post-validation</li>
+</ul>
+<h3 id="tgi_gtcscheduling"><a class="header" href="#tgi_gtcscheduling"><code>tgi_gtc::scheduling</code></a></h3>
+<p>Priority-based request scheduling.</p>
+<ul>
+<li><code>Priority</code> - Priority levels</li>
+<li><code>ScheduledTask</code> - Task data</li>
+<li><code>SchedulerConfig</code> - Scheduler config</li>
+<li><code>Scheduler</code> - Priority queue</li>
+</ul>
+<h3 id="tgi_gtcinference"><a class="header" href="#tgi_gtcinference"><code>tgi_gtc::inference</code></a></h3>
+<p>Backend initialization patterns.</p>
+<ul>
+<li><code>DataType</code> - Float32/Float16/BFloat16/Int8</li>
+<li><code>BackendConfig</code> - Model configuration</li>
+<li><code>BackendState</code> - Lifecycle states</li>
+<li><code>InferenceBackend</code> - Backend instance</li>
+</ul>
+<h3 id="tgi_gtcquantization"><a class="header" href="#tgi_gtcquantization"><code>tgi_gtc::quantization</code></a></h3>
+<p>Quantization types and compression.</p>
+<ul>
+<li><code>QuantType</code> - Q4_0/Q4_K/Q5_K/Q6_K/Q8_0/F16/F32</li>
+</ul>
+<h3 id="tgi_gtcerror"><a class="header" href="#tgi_gtcerror"><code>tgi_gtc::error</code></a></h3>
+<p>Error types and handling.</p>
+<ul>
+<li><code>Error</code> - Main error enum</li>
+<li><code>Result&lt;T&gt;</code> - Result type alias</li>
+</ul>
+<h2 id="generate-local-docs"><a class="header" href="#generate-local-docs">Generate Local Docs</a></h2>
+<pre><code class="language-bash">cargo doc --no-deps --open
+</code></pre>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="tgi-source-mapping"><a class="header" href="#tgi-source-mapping">TGI Source Mapping</a></h1>
+<p>This document maps each pattern to its original TGI source location.</p>
+<h2 id="router-1"><a class="header" href="#router-1">Router</a></h2>
+<div class="table-wrapper"><table><thead><tr><th>Pattern</th><th>TGI Source</th></tr></thead><tbody>
+<tr><td><code>RouterConfig</code></td><td><code>router/src/main.rs</code> CLI args</td></tr>
+<tr><td><code>Router</code></td><td><code>router/src/server.rs</code> Axum router</td></tr>
+<tr><td><code>RequestGuard</code></td><td><code>router/src/server.rs</code> semaphore</td></tr>
+<tr><td><code>HealthStatus</code></td><td><code>router/src/server.rs</code> <code>/health</code></td></tr>
+<tr><td><code>RouterMetrics</code></td><td><code>router/src/server.rs</code> <code>/metrics</code></td></tr>
+</tbody></table>
+</div>
+<h2 id="batching"><a class="header" href="#batching">Batching</a></h2>
+<div class="table-wrapper"><table><thead><tr><th>Pattern</th><th>TGI Source</th></tr></thead><tbody>
+<tr><td><code>BatchConfig</code></td><td><code>backends/v3/src/queue.rs</code></td></tr>
+<tr><td><code>ContinuousBatcher</code></td><td><code>backends/v3/src/queue.rs</code> Queue</td></tr>
+<tr><td><code>BatchRequest</code></td><td><code>backends/v3/src/queue.rs</code> Entry</td></tr>
+<tr><td><code>Batch</code></td><td><code>backends/v3/src/queue.rs</code> Batch</td></tr>
+</tbody></table>
+</div>
+<h2 id="streaming"><a class="header" href="#streaming">Streaming</a></h2>
+<div class="table-wrapper"><table><thead><tr><th>Pattern</th><th>TGI Source</th></tr></thead><tbody>
+<tr><td><code>SseFormatter</code></td><td><code>router/src/server.rs</code></td></tr>
+<tr><td><code>TokenEvent</code></td><td><code>router/src/lib.rs</code> StreamResponse</td></tr>
+<tr><td><code>CompleteEvent</code></td><td><code>router/src/lib.rs</code> StreamResponse</td></tr>
+<tr><td><code>FinishReason</code></td><td><code>router/src/lib.rs</code></td></tr>
+</tbody></table>
+</div>
+<h2 id="validation"><a class="header" href="#validation">Validation</a></h2>
+<div class="table-wrapper"><table><thead><tr><th>Pattern</th><th>TGI Source</th></tr></thead><tbody>
+<tr><td><code>ValidationConfig</code></td><td><code>router/src/validation.rs</code></td></tr>
+<tr><td><code>GenerateRequest</code></td><td><code>router/src/lib.rs</code> GenerateRequest</td></tr>
+<tr><td><code>RequestValidator</code></td><td><code>router/src/validation.rs</code></td></tr>
+<tr><td><code>ValidatedRequest</code></td><td><code>router/src/validation.rs</code></td></tr>
+</tbody></table>
+</div>
+<h2 id="scheduling"><a class="header" href="#scheduling">Scheduling</a></h2>
+<div class="table-wrapper"><table><thead><tr><th>Pattern</th><th>TGI Source</th></tr></thead><tbody>
+<tr><td><code>Scheduler</code></td><td><code>backends/v3/src/block_allocator.rs</code></td></tr>
+<tr><td><code>Priority</code></td><td><code>backends/v3/src/queue.rs</code></td></tr>
+<tr><td><code>ScheduledTask</code></td><td><code>backends/v3/src/queue.rs</code> Entry</td></tr>
+</tbody></table>
+</div>
+<h2 id="inference"><a class="header" href="#inference">Inference</a></h2>
+<div class="table-wrapper"><table><thead><tr><th>Pattern</th><th>TGI Source</th></tr></thead><tbody>
+<tr><td><code>InferenceBackend</code></td><td><code>backends/v3/src/backend.rs</code></td></tr>
+<tr><td><code>BackendConfig</code></td><td><code>backends/v3/src/backend.rs</code></td></tr>
+<tr><td><code>BackendState</code></td><td><code>backends/v3/src/backend.rs</code></td></tr>
+<tr><td><code>DataType</code></td><td><code>backends/v3/src/lib.rs</code></td></tr>
+</tbody></table>
+</div>
+<h2 id="quantization"><a class="header" href="#quantization">Quantization</a></h2>
+<div class="table-wrapper"><table><thead><tr><th>Pattern</th><th>TGI Source</th></tr></thead><tbody>
+<tr><td><code>QuantType</code></td><td><code>backends/llamacpp/src/quantize.rs</code></td></tr>
+</tbody></table>
+</div>
+<h2 id="tgi-repository"><a class="header" href="#tgi-repository">TGI Repository</a></h2>
+<ul>
+<li><strong>Repository</strong>: <a href="https://github.com/huggingface/text-generation-inference">huggingface/text-generation-inference</a></li>
+<li><strong>Version</strong>: 3.1.0</li>
+<li><strong>License</strong>: Apache 2.0</li>
+</ul>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="sovereign-ai-stack-1"><a class="header" href="#sovereign-ai-stack-1">Sovereign AI Stack</a></h1>
+<p>The TGI Ground Truth Corpus uses only Sovereign AI Stack crates - no external ML framework dependencies.</p>
+<h2 id="stack-overview"><a class="header" href="#stack-overview">Stack Overview</a></h2>
+<pre><code>┌─────────────────────────────────────────────────────────────┐
+│                      batuta (Orchestration)                 │
+├─────────────────────────────────────────────────────────────┤
+│  whisper.apr (ASR)  │  realizar (Inference)  │ pacha (Reg)  │
+├─────────────────────┴────────────────────────┴──────────────┤
+│   aprender (ML)   │  entrenar (Training)  │ jugar (Games)   │
+├───────────────────┴───────────────────────┴─────────────────┤
+│                 repartir (Distributed Compute)              │
+├─────────────────────────────────────────────────────────────┤
+│               trueno (SIMD/GPU Compute Primitives)          │
+└─────────────────────────────────────────────────────────────┘
+</code></pre>
+<h2 id="pattern-mapping"><a class="header" href="#pattern-mapping">Pattern Mapping</a></h2>
+<div class="table-wrapper"><table><thead><tr><th>TGI Pattern</th><th>Sovereign Stack Equivalent</th></tr></thead><tbody>
+<tr><td>Router</td><td><code>realizar::serve</code></td></tr>
+<tr><td>Batching</td><td><code>realizar::batch</code></td></tr>
+<tr><td>Streaming</td><td><code>realizar::stream</code></td></tr>
+<tr><td>Validation</td><td><code>realizar::validate</code></td></tr>
+<tr><td>Scheduling</td><td><code>realizar::schedule</code></td></tr>
+<tr><td>Inference</td><td><code>realizar::inference</code></td></tr>
+<tr><td>Quantization</td><td><code>aprender::quantize</code></td></tr>
+</tbody></table>
+</div>
+<h2 id="key-crates"><a class="header" href="#key-crates">Key Crates</a></h2>
+<h3 id="trueno"><a class="header" href="#trueno">trueno</a></h3>
+<p>SIMD/GPU compute primitives.</p>
+<ul>
+<li>AVX2/AVX-512/NEON SIMD</li>
+<li>wgpu GPU compute</li>
+<li>LZ4/ZSTD compression</li>
+</ul>
+<h3 id="aprender"><a class="header" href="#aprender">aprender</a></h3>
+<p>ML algorithms and model formats.</p>
+<ul>
+<li>APR v2 model format</li>
+<li>Tensor operations</li>
+<li>Quantization kernels</li>
+</ul>
+<h3 id="realizar"><a class="header" href="#realizar">realizar</a></h3>
+<p>Inference engine.</p>
+<ul>
+<li>Model loading</li>
+<li>Batch inference</li>
+<li>Streaming generation</li>
+</ul>
+<h2 id="why-sovereign-stack"><a class="header" href="#why-sovereign-stack">Why Sovereign Stack?</a></h2>
+<ol>
+<li><strong>Pure Rust</strong> - No Python, no C++ bindings</li>
+<li><strong>Portable</strong> - Runs everywhere Rust compiles</li>
+<li><strong>Auditable</strong> - Single language, clear ownership</li>
+<li><strong>Performant</strong> - Zero-copy, SIMD-accelerated</li>
+<li><strong>Privacy</strong> - No external dependencies phoning home</li>
+</ol>
+<h2 id="learn-more"><a class="header" href="#learn-more">Learn More</a></h2>
+<ul>
+<li><a href="https://crates.io/crates/trueno">trueno on crates.io</a></li>
+<li><a href="https://crates.io/crates/aprender">aprender on crates.io</a></li>
+<li><a href="https://crates.io/crates/realizar">realizar on crates.io</a></li>
+</ul>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+
+            </nav>
+
+        </div>
+
+
+
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="elasticlunr.min.js"></script>
+        <script src="mark.min.js"></script>
+        <script src="searcher.js"></script>
+
+        <script src="clipboard.min.js"></script>
+        <script src="highlight.js"></script>
+        <script src="book.js"></script>
+
+        <!-- Custom JS scripts -->
+
+        <script>
+        window.addEventListener('load', function() {
+            window.setTimeout(window.print, 100);
+        });
+        </script>
+
+    </div>
+    </body>
+</html>
