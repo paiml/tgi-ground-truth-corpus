@@ -17,8 +17,8 @@ path = "src/lib.rs"
 [dependencies]
 # Sovereign AI Stack (versions from crates.io)
 trueno = { version = "0.14", optional = true }
-# aprender = "0.25"    # Add when needed
-# realizar = "0.6"     # Add when needed
+aprender = { version = "0.25", optional = true }
+realizar = { version = "0.6", optional = true }
 
 # Model loading
 safetensors = { version = "0.7", optional = true }
@@ -39,9 +39,15 @@ criterion = { version = "0.6", features = ["html_reports"] }
 
 [features]
 default = []
-full = ["gpu", "quantization", "inference"]
-gpu = []
-quantization = []
+full = ["sovereign-stack", "inference"]
+
+# Sovereign AI Stack integration
+sovereign-stack = ["dep:trueno", "dep:aprender", "dep:realizar"]
+trueno-backend = ["dep:trueno"]
+aprender-backend = ["dep:aprender"]
+realizar-backend = ["dep:realizar"]
+
+# Inference with safetensors
 inference = ["dep:trueno", "dep:safetensors", "dep:bytemuck"]
 
 [[example]]
@@ -81,3 +87,46 @@ all = { level = "warn", priority = -1 }
 pedantic = { level = "warn", priority = -1 }
 nursery = { level = "warn", priority = -1 }
 cargo = { level = "warn", priority = -1 }
+# Allow common patterns acceptable for this ground truth corpus
+uninlined_format_args = "allow"
+cast_precision_loss = "allow"
+cast_possible_truncation = "allow"
+module_name_repetitions = "allow"
+must_use_candidate = "allow"
+missing_panics_doc = "allow"
+missing_errors_doc = "allow"
+collection_is_never_read = "allow"
+significant_drop_tightening = "allow"
+cast_sign_loss = "allow"
+cast_lossless = "allow"
+explicit_iter_loop = "allow"
+assigning_clones = "allow"
+too_many_lines = "allow"
+explicit_into_iter_loop = "allow"
+redundant_closure_for_method_calls = "allow"
+similar_names = "allow"
+unreadable_literal = "allow"
+suboptimal_flops = "allow"
+needless_range_loop = "allow"
+float_cmp = "allow"
+iter_cloned_collect = "allow"
+cloned_instead_of_copied = "allow"
+no_effect_underscore_binding = "allow"
+option_if_let_else = "allow"
+use_self = "allow"
+missing_const_for_fn = "allow"
+needless_lifetimes = "allow"
+format_push_string = "allow"
+option_map_or_none = "allow"
+return_self_not_must_use = "allow"
+elidable_lifetime_names = "allow"
+map_unwrap_or = "allow"
+mixed_attributes_style = "allow"
+derive_partial_eq_without_eq = "allow"
+match_same_arms = "allow"
+or_fun_call = "allow"
+manual_div_ceil = "allow"
+doc_markdown = "allow"
+items_after_statements = "allow"
+unit_arg = "allow"
+redundant_clone = "allow"

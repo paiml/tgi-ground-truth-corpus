@@ -3,6 +3,8 @@
 //! Validates sampling overhead and performance characteristics of
 //! temperature, top-k, top-p, and penalty-based sampling.
 
+#![allow(clippy::cast_precision_loss)]
+
 use criterion::{criterion_group, criterion_main, BenchmarkId, Criterion, Throughput};
 use std::hint::black_box;
 use tgi_gtc::sampling::{argmax, softmax, top_k, Sampler, SamplingConfig};

@@ -731,7 +731,7 @@ mod proptests {
             prop_assert!(router.try_acquire().is_err());
 
             // After dropping one, should succeed
-            guards.pop();
+            drop(guards.pop());
             prop_assert!(router.try_acquire().is_ok());
         }
 

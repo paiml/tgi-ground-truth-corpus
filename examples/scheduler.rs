@@ -132,7 +132,7 @@ fn main() {
     let start = Instant::now();
     for i in 0..SCHEDULE_ITERATIONS {
         let task = ScheduledTask::new(i, 100).with_priority(Priority::Normal);
-        black_box(scheduler.schedule(task));
+        let _ = black_box(scheduler.schedule(task));
     }
     let schedule_time = start.elapsed();
 

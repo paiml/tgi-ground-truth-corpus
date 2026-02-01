@@ -88,6 +88,16 @@
 #![allow(clippy::return_self_not_must_use)]
 #![allow(clippy::elidable_lifetime_names)]
 #![allow(clippy::map_unwrap_or)]
+#![allow(clippy::similar_names)]
+#![allow(clippy::unreadable_literal)]
+#![allow(clippy::mixed_attributes_style)]
+#![allow(clippy::derive_partial_eq_without_eq)]
+#![allow(clippy::suboptimal_flops)]
+#![allow(clippy::needless_range_loop)]
+#![allow(clippy::float_cmp)]
+#![allow(clippy::iter_cloned_collect)]
+#![allow(clippy::cloned_instead_of_copied)]
+#![allow(clippy::no_effect_underscore_binding)]
 
 pub mod attention;
 pub mod batching;
@@ -99,6 +109,7 @@ pub mod quantization;
 pub mod router;
 pub mod sampling;
 pub mod scheduling;
+pub mod stack;
 pub mod streaming;
 pub mod tokenizer;
 pub mod validation;
