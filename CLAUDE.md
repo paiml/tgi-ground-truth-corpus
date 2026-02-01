@@ -198,6 +198,10 @@ batuta oracle --rag "block allocation KV cache"
 batuta oracle --rag-stats
 ```
 
+Index auto-updates via post-commit hooks and `ora-fresh` on shell login.
+To manually check freshness: `ora-fresh`
+To force full reindex: `batuta oracle --rag-index --force`
+
 ## Cross-Reference
 
 - **TGI Source**: `~/src/text-generation-inference/`
