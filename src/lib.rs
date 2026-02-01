@@ -13,6 +13,10 @@
 //! - **Validation**: Request validation and token counting
 //! - **Scheduling**: Fair request scheduling and queue management
 //! - **Quantization**: GGUF/AWQ/GPTQ format support
+//! - **Attention**: Scaled dot-product, Flash Attention, RoPE
+//! - **KV Cache**: Block-based memory management (PagedAttention)
+//! - **Sampling**: Temperature, top-k, top-p, repetition penalties
+//! - **Tokenizer**: BPE encoding/decoding, special tokens
 //!
 //! # Sovereign AI Stack
 //!
@@ -85,13 +89,18 @@
 #![allow(clippy::elidable_lifetime_names)]
 #![allow(clippy::map_unwrap_or)]
 
+pub mod attention;
 pub mod batching;
 pub mod error;
 pub mod inference;
+pub mod kv_cache;
+pub mod profiling;
 pub mod quantization;
 pub mod router;
+pub mod sampling;
 pub mod scheduling;
 pub mod streaming;
+pub mod tokenizer;
 pub mod validation;
 
 pub use error::{Error, Result};

@@ -24,7 +24,11 @@ fn main() {
     println!("Backend Configuration:");
     println!("  Model: {}", config.model_id);
     println!("  Device: {}", config.device);
-    println!("  DType: {} ({} bytes/element)", config.dtype.name(), config.dtype.bytes());
+    println!(
+        "  DType: {} ({} bytes/element)",
+        config.dtype.name(),
+        config.dtype.bytes()
+    );
     println!("  Max sequence length: {}", config.max_sequence_length);
     println!("  Flash attention: {}", config.use_flash_attention);
     println!();
@@ -71,11 +75,7 @@ fn main() {
     ];
 
     for dtype in dtypes {
-        println!(
-            "  {:10} - {} bytes/element",
-            dtype.name(),
-            dtype.bytes()
-        );
+        println!("  {:10} - {} bytes/element", dtype.name(), dtype.bytes());
     }
 
     // Validation example

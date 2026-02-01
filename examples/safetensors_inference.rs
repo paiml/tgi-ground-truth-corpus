@@ -18,8 +18,8 @@
 //! 4. Streaming results via SseFormatter
 //! 5. CPU computation with proper memory layout
 
-use safetensors::tensor::{SafeTensors, TensorView};
 use safetensors::serialize;
+use safetensors::tensor::{SafeTensors, TensorView};
 use std::collections::HashMap;
 use std::time::Instant;
 
@@ -62,16 +62,19 @@ impl MlpWeights {
         let b2 = vec![0.0; output_dim];
 
         Self {
-            w1, b1, w2, b2,
-            input_dim, hidden_dim, output_dim,
+            w1,
+            b1,
+            w2,
+            b2,
+            input_dim,
+            hidden_dim,
+            output_dim,
         }
     }
 
     /// Convert f32 slice to bytes
     fn f32_to_bytes(data: &[f32]) -> Vec<u8> {
-        data.iter()
-            .flat_map(|f| f.to_le_bytes())
-            .collect()
+        data.iter().flat_map(|f| f.to_le_bytes()).collect()
     }
 
     /// Convert bytes to f32 vec
@@ -96,15 +99,12 @@ impl MlpWeights {
                 safetensors::Dtype::F32,
                 vec![self.hidden_dim, self.input_dim],
                 &w1_bytes,
-            ).unwrap(),
+            )
+            .unwrap(),
         );
         tensors.insert(
             "b1".to_string(),
-            TensorView::new(
-                safetensors::Dtype::F32,
-                vec![self.hidden_dim],
-                &b1_bytes,
-            ).unwrap(),
+            TensorView::new(safetensors::Dtype::F32, vec![self.hidden_dim], &b1_bytes).unwrap(),
         );
         tensors.insert(
             "w2".to_string(),
@@ -112,15 +112,12 @@ impl MlpWeights {
                 safetensors::Dtype::F32,
                 vec![self.output_dim, self.hidden_dim],
                 &w2_bytes,
-            ).unwrap(),
+            )
+            .unwrap(),
         );
         tensors.insert(
             "b2".to_string(),
-            TensorView::new(
-                safetensors::Dtype::F32,
-                vec![self.output_dim],
-                &b2_bytes,
-            ).unwrap(),
+            TensorView::new(safetensors::Dtype::F32, vec![self.output_dim], &b2_bytes).unwrap(),
         );
 
         serialize(tensors, None).unwrap()
@@ -145,8 +142,13 @@ impl MlpWeights {
         let output_dim = w2_tensor.shape()[0];
 
         Self {
-            w1, b1, w2, b2,
-            input_dim, hidden_dim, output_dim,
+            w1,
+            b1,
+            w2,
+            b2,
+            input_dim,
+            hidden_dim,
+            output_dim,
         }
     }
 }
@@ -188,15 +190,14 @@ fn mlp_forward(weights: &MlpWeights, input: &[f32]) -> Vec<f32> {
 
 /// Batched MLP forward pass
 fn mlp_forward_batch(weights: &MlpWeights, batch: &[Vec<f32>]) -> Vec<Vec<f32>> {
-    batch.iter().map(|input| mlp_forward(weights, input)).collect()
+    batch
+        .iter()
+        .map(|input| mlp_forward(weights, input))
+        .collect()
 }
 
 /// Simulated token generation using MLP as a tiny "language model"
-fn generate_tokens(
-    weights: &MlpWeights,
-    input: &[f32],
-    max_tokens: usize,
-) -> Vec<(u32, f32)> {
+fn generate_tokens(weights: &MlpWeights, input: &[f32], max_tokens: usize) -> Vec<(u32, f32)> {
     let mut tokens = Vec::new();
     let mut current_input = input.to_vec();
 
@@ -245,13 +246,22 @@ fn main() {
     let weights = MlpWeights::random(input_dim, hidden_dim, output_dim);
 
     let safetensors_data = weights.to_safetensors();
-    println!("Serialized to safetensors: {} bytes", safetensors_data.len());
+    println!(
+        "Serialized to safetensors: {} bytes",
+        safetensors_data.len()
+    );
 
     // Load model back (simulates loading from disk)
     println!("Loading model from safetensors...");
     let loaded_weights = MlpWeights::from_safetensors(&safetensors_data);
-    println!("  w1: [{}, {}]", loaded_weights.hidden_dim, loaded_weights.input_dim);
-    println!("  w2: [{}, {}]", loaded_weights.output_dim, loaded_weights.hidden_dim);
+    println!(
+        "  w1: [{}, {}]",
+        loaded_weights.hidden_dim, loaded_weights.input_dim
+    );
+    println!(
+        "  w2: [{}, {}]",
+        loaded_weights.output_dim, loaded_weights.hidden_dim
+    );
     println!();
 
     // Setup batching using our patterns
@@ -296,7 +306,11 @@ fn main() {
 
     while let Some(batch) = batcher.force_batch() {
         batch_num += 1;
-        println!("Processing batch {} ({} requests)...", batch_num, batch.size());
+        println!(
+            "Processing batch {} ({} requests)...",
+            batch_num,
+            batch.size()
+        );
 
         // Get inputs for this batch
         let batch_inputs: Vec<Vec<f32>> = batch

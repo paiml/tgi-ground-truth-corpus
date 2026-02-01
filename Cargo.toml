@@ -44,6 +44,30 @@ gpu = []
 quantization = []
 inference = ["dep:trueno", "dep:safetensors", "dep:bytemuck"]
 
+[[example]]
+name = "safetensors_inference"
+required-features = ["inference"]
+
+[[bench]]
+name = "batching_bench"
+harness = false
+
+[[bench]]
+name = "attention_bench"
+harness = false
+
+[[bench]]
+name = "sampling_bench"
+harness = false
+
+[[bench]]
+name = "tokenizer_bench"
+harness = false
+
+[[bench]]
+name = "kv_cache_bench"
+harness = false
+
 [profile.release]
 lto = true
 codegen-units = 1

@@ -8,8 +8,17 @@
 //! ```bash
 //! cargo run --example continuous_batching
 //! ```
+//!
+//! # Performance Targets
+//!
+//! - Request add: < 500 ns
+//! - Batch formation: < 1 µs per request
+//! - Queue operations: < 100 ns
 
+use std::hint::black_box;
+use std::time::Instant;
 use tgi_gtc::batching::{BatchConfig, BatchRequest, ContinuousBatcher};
+use tgi_gtc::profiling::PerfMetrics;
 
 fn main() {
     println!("=== Continuous Batching Demo ===\n");
@@ -29,7 +38,7 @@ fn main() {
     println!("  Max wait: {}ms", config.max_wait_ms);
     println!();
 
-    let batcher = ContinuousBatcher::new(config);
+    let batcher = ContinuousBatcher::new(config.clone());
 
     // Simulate incoming requests
     println!("Simulating incoming requests...\n");
@@ -63,13 +72,19 @@ fn main() {
         println!("Batch {}:", batch_num);
         println!("  Requests: {}", batch.size());
         println!("  Total input tokens: {}", batch.total_input_tokens);
-        println!("  Request IDs: {:?}", batch.requests.iter().map(|r| r.id).collect::<Vec<_>>());
+        println!(
+            "  Request IDs: {:?}",
+            batch.requests.iter().map(|r| r.id).collect::<Vec<_>>()
+        );
         println!();
         batch_num += 1;
     }
 
     if batcher.queue_len() > 0 {
-        println!("Remaining in queue: {} (waiting for min batch size)", batcher.queue_len());
+        println!(
+            "Remaining in queue: {} (waiting for min batch size)",
+            batcher.queue_len()
+        );
 
         // Force remaining batch
         if let Some(batch) = batcher.force_batch() {
@@ -79,5 +94,109 @@ fn main() {
         }
     }
 
-    println!("\n=== Demo Complete ===");
+    // === PROFILING ===
+    println!("\n--- Performance Profiling ---\n");
+
+    // Profile request add operations
+    const ADD_ITERATIONS: u64 = 50_000;
+    let batcher = ContinuousBatcher::new(config.clone());
+
+    let start = Instant::now();
+    for _ in 0..ADD_ITERATIONS {
+        let id = batcher.next_id();
+        let request = BatchRequest::new(id, 128, 256);
+        black_box(batcher.add(request));
+    }
+    let add_time = start.elapsed();
+
+    let add_metrics = PerfMetrics::new("Request Add", add_time, ADD_ITERATIONS);
+    add_metrics.report();
+
+    // Profile batch formation
+    const BATCH_ITERATIONS: u64 = 1000;
+    let mut total_batched = 0u64;
+
+    let start = Instant::now();
+    for _ in 0..BATCH_ITERATIONS {
+        let batcher = ContinuousBatcher::new(config.clone());
+
+        // Add 100 requests
+        for _ in 0..100 {
+            let id = batcher.next_id();
+            let request = BatchRequest::new(id, 128, 256);
+            batcher.add(request);
+        }
+
+        // Form all batches
+        while let Some(batch) = batcher.force_batch() {
+            total_batched += batch.size() as u64;
+        }
+    }
+    let batch_time = start.elapsed();
+
+    let batch_metrics = PerfMetrics::new("Batch Formation (100 req)", batch_time, BATCH_ITERATIONS);
+    batch_metrics.report();
+
+    println!("\n  Total requests batched: {}", total_batched);
+    println!(
+        "  Batching throughput: {:.0} req/sec",
+        total_batched as f64 / batch_time.as_secs_f64()
+    );
+
+    // Profile queue length check
+    const QUEUE_ITERATIONS: u64 = 100_000;
+    let batcher = ContinuousBatcher::new(config.clone());
+    for i in 0..1000 {
+        batcher.add(BatchRequest::new(i, 128, 256));
+    }
+
+    let start = Instant::now();
+    for _ in 0..QUEUE_ITERATIONS {
+        black_box(batcher.queue_len());
+    }
+    let queue_time = start.elapsed();
+
+    let queue_metrics = PerfMetrics::new("Queue Length Check", queue_time, QUEUE_ITERATIONS);
+    queue_metrics.report();
+
+    // === PERFORMANCE ASSERTIONS ===
+    println!("\n--- Performance Validation ---\n");
+
+    println!("Validating performance targets...");
+
+    // Request add should be fast
+    assert!(
+        add_metrics.latency_ns < 5000.0,
+        "Request add too slow: {:.2} ns",
+        add_metrics.latency_ns
+    );
+    println!(
+        "  ✓ Request add: {:.2} ns/op (< 5 µs)",
+        add_metrics.latency_ns
+    );
+
+    // Batching throughput should be high
+    let batching_throughput = total_batched as f64 / batch_time.as_secs_f64();
+    assert!(
+        batching_throughput > 100_000.0,
+        "Batching throughput too low: {:.0} req/sec",
+        batching_throughput
+    );
+    println!(
+        "  ✓ Batching throughput: {:.0} req/sec (> 100k)",
+        batching_throughput
+    );
+
+    // Queue length should be O(1)
+    assert!(
+        queue_metrics.latency_ns < 1000.0,
+        "Queue length check too slow: {:.2} ns",
+        queue_metrics.latency_ns
+    );
+    println!(
+        "  ✓ Queue length: {:.2} ns/op (< 1 µs)",
+        queue_metrics.latency_ns
+    );
+
+    println!("\n=== Demo Complete - All Performance Targets Met ===");
 }

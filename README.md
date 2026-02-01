@@ -1,8 +1,35 @@
+<div align="center">
+
+```
+╔══════════════════════════════════════════════════════════════════════════════╗
+║                                                                              ║
+║   ████████╗ ██████╗ ██╗     ██████╗ ██████╗  ██████╗ ██╗   ██╗███╗   ██╗██████╗  ║
+║   ╚══██╔══╝██╔════╝ ██║    ██╔════╝ ██╔══██╗██╔═══██╗██║   ██║████╗  ██║██╔══██╗ ║
+║      ██║   ██║  ███╗██║    ██║  ███╗██████╔╝██║   ██║██║   ██║██╔██╗ ██║██║  ██║ ║
+║      ██║   ██║   ██║██║    ██║   ██║██╔══██╗██║   ██║██║   ██║██║╚██╗██║██║  ██║ ║
+║      ██║   ╚██████╔╝██║    ╚██████╔╝██║  ██║╚██████╔╝╚██████╔╝██║ ╚████║██████╔╝ ║
+║      ╚═╝    ╚═════╝ ╚═╝     ╚═════╝ ╚═╝  ╚═╝ ╚═════╝  ╚═════╝ ╚═╝  ╚═══╝╚═════╝  ║
+║                                                                              ║
+║              ████████╗██████╗ ██╗   ██╗████████╗██╗  ██╗                      ║
+║              ╚══██╔══╝██╔══██╗██║   ██║╚══██╔══╝██║  ██║                      ║
+║                 ██║   ██████╔╝██║   ██║   ██║   ███████║                      ║
+║                 ██║   ██╔══██╗██║   ██║   ██║   ██╔══██║                      ║
+║                 ██║   ██║  ██║╚██████╔╝   ██║   ██║  ██║                      ║
+║                 ╚═╝   ╚═╝  ╚═╝ ╚═════╝    ╚═╝   ╚═╝  ╚═╝                      ║
+║                                                                              ║
+║          Production Inference Patterns for the Sovereign AI Stack           ║
+║                                                                              ║
+╚══════════════════════════════════════════════════════════════════════════════╝
+```
+
 # TGI Ground Truth Corpus
 
 [![License](https://img.shields.io/badge/license-Apache%202.0-blue.svg)](LICENSE)
 [![Rust](https://img.shields.io/badge/rust-1.83+-orange.svg)](https://www.rust-lang.org)
 [![Coverage](https://img.shields.io/badge/coverage-95%25-green.svg)](https://codecov.io)
+[![Tests](https://img.shields.io/badge/tests-221%20passed-success.svg)]()
+
+</div>
 
 A curated collection of Rust patterns extracted from [HuggingFace Text Generation Inference](https://github.com/huggingface/text-generation-inference), adapted for the **Sovereign AI Stack**.
 
@@ -26,14 +53,19 @@ TGI is the battle-tested inference server behind HuggingFace's production infras
 ## Module Structure
 
 ```
-src/tgi_gtc/
-├── router/        # HTTP routing, health checks, metrics
-├── inference/     # Backend inference engine patterns
-├── batching/      # Continuous batching, request queuing
-├── quantization/  # GGUF, AWQ, GPTQ support
-├── streaming/     # SSE streaming responses
-├── validation/    # Request validation, token counting
-└── scheduling/    # Block allocation, memory management
+src/
+├── attention.rs     # Scaled dot-product, Flash Attention, RoPE, GQA/MQA
+├── batching.rs      # Continuous batching, request queuing
+├── inference.rs     # Backend inference engine patterns
+├── kv_cache.rs      # Block-based KV cache (PagedAttention), CoW forking
+├── profiling.rs     # Performance profiling utilities
+├── quantization.rs  # GGUF, AWQ, GPTQ compression
+├── router.rs        # HTTP routing, health checks, metrics
+├── sampling.rs      # Temperature, top-k, top-p, penalties
+├── scheduling.rs    # Priority scheduling, queue management
+├── streaming.rs     # SSE streaming responses
+├── tokenizer.rs     # BPE encoding/decoding, special tokens
+└── validation.rs    # Request validation, token counting
 ```
 
 ## Pattern Mapping
@@ -43,8 +75,13 @@ src/tgi_gtc/
 | HTTP Router | `router/src/server.rs` | `realizar::serve` |
 | Continuous Batching | `backends/v3/src/queue.rs` | `realizar::batch` |
 | Block Allocator | `backends/v3/src/block_allocator.rs` | `realizar::memory` |
+| KV Cache | `backends/v3/src/block_allocator.rs` | `realizar::cache` |
+| Attention | `server/text_generation_server/models/` | `trueno::attention` |
+| Flash Attention | `server/text_generation_server/layers/` | `trueno::flash` |
 | SSE Streaming | `router/src/server.rs` | `realizar::stream` |
 | Request Validation | `router/src/validation.rs` | Custom |
+| Token Sampling | `server/text_generation_server/utils/` | `realizar::sample` |
+| Tokenization | HuggingFace tokenizers | `aprender::tokenize` |
 | GGUF Loading | `backends/llamacpp/` | `aprender::format::gguf` |
 | Quantization | `backends/llamacpp/src/quantize.rs` | `aprender::quantize` |
 
@@ -87,6 +124,43 @@ Or use specific modules:
 tgi-ground-truth-corpus = { version = "0.1", features = ["router", "batching"] }
 ```
 
+## Examples
+
+Run the examples to see patterns in action with performance profiling:
+
+```bash
+# Router with health checks and request limiting
+cargo run --example basic_router --release
+
+# Continuous batching algorithm
+cargo run --example continuous_batching --release
+
+# SSE token streaming
+cargo run --example streaming_sse --release
+
+# Priority scheduler
+cargo run --example scheduler --release
+
+# Request validation
+cargo run --example request_validation --release
+
+# SafeTensors inference (requires inference feature)
+cargo run --example safetensors_inference --features inference --release
+```
+
+Each example includes performance profiling with assertions:
+
+```
+=== TGI Router Pattern Demo ===
+Router Creation: 160ns
+--- Performance Validation ---
+  ✓ Router creation: 160ns (< 100 µs)
+  ✓ Health check: 6.68 ns/op (< 1000 ns)
+  ✓ Request cycle: 6.75 ns/op (< 10 µs)
+  Throughput: 148056024 req/sec
+=== Demo Complete - All Performance Targets Met ===
+```
+
 ## Development
 
 ```bash
@@ -96,8 +170,10 @@ cargo build
 # Test with coverage
 cargo llvm-cov --html
 
-# Benchmarks
-cargo bench
+# Benchmarks (Criterion)
+cargo bench --bench batching_bench
+cargo bench --bench attention_bench
+cargo bench --bench sampling_bench
 
 # Lint
 cargo clippy -- -D warnings

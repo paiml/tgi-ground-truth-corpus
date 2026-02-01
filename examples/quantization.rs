@@ -61,10 +61,7 @@ fn main() {
     for qtype in [QuantType::Q4_K, QuantType::Q8_0, QuantType::F16] {
         let memory = (params_7b * qtype.bits_per_weight() as f64 / 8.0) / 1_000_000_000.0;
         let savings = (1.0 - memory / f32_memory) * 100.0;
-        println!(
-            "  {:?}: {:.1} GB ({:.0}% smaller)",
-            qtype, memory, savings
-        );
+        println!("  {:?}: {:.1} GB ({:.0}% smaller)", qtype, memory, savings);
     }
 
     // Recommendations
